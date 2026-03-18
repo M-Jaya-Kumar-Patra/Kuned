@@ -50,10 +50,16 @@ export default function BuyCoinsPage() {
             : "sandbox",
       });
 
+
+      console.log("casssssssssssssssshhhhhhh",  cashfree)
+      console.log("iiiiiiiiiiiiiiiiiiidddddddddd",  data)
+
       await cashfree.checkout({
         paymentSessionId: data.paymentSessionId,
         redirectTarget: "_self",
       });
+
+
 
     } catch (error) {
       console.error(error);
