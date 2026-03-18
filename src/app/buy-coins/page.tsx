@@ -22,6 +22,8 @@ export default function BuyCoinsPage() {
     try {
       setLoading(pkg.id);
 
+
+      console.log("casssssssssssssssshhhhhhh")
       const token = localStorage.getItem("token");
 
       const res = await fetch("/api/payments/create-order", {
