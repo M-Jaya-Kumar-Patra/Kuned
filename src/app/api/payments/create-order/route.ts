@@ -52,7 +52,7 @@ export async function POST(req: Request) {
   };
 
   try {
-    const response = await fetch(`${CASHFREE_BASE_URL}/pg/orders`, {
+    const response = await fetch(`https://api.cashfree.com/pg/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
