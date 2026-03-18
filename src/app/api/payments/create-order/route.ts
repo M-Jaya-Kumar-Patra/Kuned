@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const { packageId } = await req.json();
 
   const packages: Record<string, { coins: number; price: number }> = {
-    starter: { coins: 10, price: 49 },
+    starter: { coins: 10, price: 1 },
     popular: { coins: 25, price: 99 },
     pro: { coins: 60, price: 199 },
   };
