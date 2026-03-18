@@ -81,8 +81,18 @@ const picture = payload?.picture || "";
 
   } catch (error) {
   console.log("🔥 GOOGLE ERROR:", error);
+
+  let message = "Unknown error";
+
+  if (error instanceof Error) {
+    message = error.message;
+  }
+
   return NextResponse.json(
-    { message: "Google auth failed", error: error.message },
+    {
+      message: "Google auth failed",
+      error: message,
+    },
     { status: 500 }
   );
 }
