@@ -30,7 +30,7 @@ export async function POST(req: Request) {
 
   // ✅ ENV BASED URL
   const CASHFREE_BASE_URL =
-    process.env.CASHFREE_ENV !== "PRODUCTION"
+    process.env.CASHFREE_ENV === "PRODUCTION"
       ? "https://api.cashfree.com"
       : "https://sandbox.cashfree.com";
 
