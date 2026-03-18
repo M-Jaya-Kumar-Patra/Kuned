@@ -26,7 +26,6 @@ export async function PUT(req: Request) {
       );
     }
 
-    console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
 
     const decoded = verifyToken(token) as TokenPayload | null;
 
