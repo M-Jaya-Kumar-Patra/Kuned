@@ -26,9 +26,12 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "**/*.d.ts",                // ✅ ADD THIS
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
   "exclude": ["node_modules"]
 }
+
+
