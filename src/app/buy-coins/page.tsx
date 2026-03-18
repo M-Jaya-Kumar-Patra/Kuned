@@ -44,6 +44,9 @@ export default function BuyCoinsPage() {
         return;
       }
 
+      console.log("casssssssssssssssshhhhhhh",  process.env.NEXT_PUBLIC_CASHFREE_ENV)
+
+
       // ✅ LOAD SDK (CORRECT WAY)
       const cashfree = await load({
         mode:
