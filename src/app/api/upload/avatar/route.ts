@@ -9,7 +9,7 @@ export async function POST(req: Request) {
 
     await dbConnect();
 
-    const user = requireAuth(req);
+    const user = requireAuth(req); if (user instanceof Response) return user;
 
     const formData = await req.formData();
     const file = formData.get("file") as File;

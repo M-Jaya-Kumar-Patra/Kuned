@@ -9,7 +9,7 @@ import { withdrawalEmail } from "@/lib/emailTemplates/withdrawalEmail";
 export async function POST(req: Request) {
   await dbConnect();
 
-  const auth = requireAuth(req);
+  const auth = requireAuth(req); if (auth instanceof Response) return auth;
   if (auth instanceof NextResponse) return auth;
 
   const userId = auth.id;

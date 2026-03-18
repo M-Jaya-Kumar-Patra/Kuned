@@ -6,7 +6,7 @@ import { dbConnect } from "@/lib/dbConnect";
 export async function GET(req: Request) {
   await dbConnect();
 
-  const user = await requireAuth(req);
+  const user = requireAuth(req); if (user instanceof Response) return user;
 
   const { searchParams } = new URL(req.url);
   const listingId = searchParams.get("listingId");

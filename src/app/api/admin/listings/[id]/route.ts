@@ -9,7 +9,7 @@ export async function DELETE(
   context: { params: Promise<{ id: string }> }
 ) {
 
-  const auth = requireAuth(req);
+  const auth = requireAuth(req); if (auth instanceof Response) return auth;
   if (auth instanceof Response) return auth;
 
   await dbConnect();

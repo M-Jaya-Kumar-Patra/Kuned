@@ -5,7 +5,7 @@ import { dbConnect } from "@/lib/dbConnect";
 
 export async function POST(req: Request) {
 
-  const auth = await requireAuth(req);
+  const auth = requireAuth(req); if (auth instanceof Response) return auth;
   if (auth instanceof Response) return auth;
 
   const user = auth;
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
   const { searchParams } = new URL(req.url);
   const type = searchParams.get("type");
 
-  const filter: any = {
+  const filter: Record<string, unknown> = {
     userId: user.id,
     isRead: false
   };

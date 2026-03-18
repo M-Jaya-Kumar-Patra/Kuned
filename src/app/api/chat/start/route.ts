@@ -5,7 +5,7 @@ import { dbConnect } from "@/lib/dbConnect";
 
 export async function POST(req: Request) {
 
-  const auth = requireAuth(req);
+  const auth = requireAuth(req); if (auth instanceof Response) return auth;
   if (auth instanceof Response) return auth;
 
   const { sellerId, listingId } = await req.json();

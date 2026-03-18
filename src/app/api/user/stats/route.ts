@@ -10,7 +10,7 @@ export async function GET(req: Request) {
 
     await dbConnect();
 
-    const user = requireAuth(req);
+    const user = requireAuth(req); if (user instanceof Response) return user;
 
     const listings = await Listing.countDocuments({
       sellerId: user.id

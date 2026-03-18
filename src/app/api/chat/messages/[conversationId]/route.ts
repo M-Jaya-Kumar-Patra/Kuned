@@ -8,7 +8,7 @@ export async function GET(
   { params }: { params: Promise<{ conversationId: string }> }
 ) {
 
-  const auth = await requireAuth(req);
+  const auth = requireAuth(req); if (auth instanceof Response) return auth;
   if (auth instanceof Response) return auth;
 
   await dbConnect();

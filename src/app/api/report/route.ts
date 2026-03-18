@@ -9,7 +9,7 @@ import User from "@/models/User";
 
 export async function POST(req: Request) {
 
-  const auth = requireAuth(req);
+  const auth = requireAuth(req); if (auth instanceof Response) return auth;
   if (auth instanceof Response) return auth;
 
   const { targetType, targetId, reason, description } = await req.json();

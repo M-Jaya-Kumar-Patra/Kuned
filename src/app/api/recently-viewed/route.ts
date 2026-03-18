@@ -6,7 +6,7 @@ import {dbConnect} from "@/lib/dbConnect";
 export async function POST(req: Request) {
   await dbConnect();
 
-  const user = await requireAuth(req);
+  const user = requireAuth(req); if (user instanceof Response) return user;
   const { listingId } = await req.json();
 
   await RecentlyViewed.findOneAndUpdate(
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
 export async function GET(req: Request) {
   await dbConnect();
 
-  const user = await requireAuth(req);
+  const user = requireAuth(req); if (user instanceof Response) return user;
 
   const items = await RecentlyViewed.find({
     userId: user.id
