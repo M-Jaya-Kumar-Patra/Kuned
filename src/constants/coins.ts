@@ -1,0 +1,6 @@
+export const COIN_COST = {
+  POST_LISTING: 1,
+  HIGHLIGHT_LISTING: 3,
+  TOP_LISTING: 5,
+  URGENT_SALE: 2
+};
