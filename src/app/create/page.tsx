@@ -38,8 +38,24 @@ export default function CreateListingPage() {
       });
 
       router.push("/dashboard");
-    } catch (error) {
-  alert(error?.response?.data?.message || "Failed to create listing");
+    } catch (error: unknown) {
+  if (
+    error &&
+    typeof error === "object" &&
+    "response" in error
+  ) {
+    const err = error as {
+      response?: {
+        data?: {
+          message?: string;
+        };
+      };
+    };
+
+    alert(err.response?.data?.message || "Failed to create listing");
+  } else {
+    alert("Failed to create listing");
+  }
 }
   };
 

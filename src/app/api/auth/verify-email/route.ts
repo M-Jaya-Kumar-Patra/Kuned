@@ -18,10 +18,6 @@ export async function POST(req: Request) {
   }
 
   
-  console.log("Reqqqqqqqqqqqqqqqqqq", pin)
-
-  
-
   if (user.verificationPin !== pin) {
     return NextResponse.json(
       { message: "Invalid PIN" },

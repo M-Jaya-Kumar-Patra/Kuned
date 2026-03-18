@@ -24,7 +24,7 @@ export default function ProfilePage() {
   const [stats, setStats] = useState<Stats | null>(null);
 
   const [editing, setEditing] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(user?.name || "");
 
   useEffect(() => {
     const loadData = async () => {
@@ -38,9 +38,7 @@ export default function ProfilePage() {
     loadData();
   }, []);
 
-  useEffect(() => {
-    if (user) setName(user.name);
-  }, [user]);
+  
 
   if (!user) return <p className="p-10 text-center">Loading...</p>;
 
