@@ -5,4 +5,5 @@ export type Notification = {
   type: string;
   isRead: boolean;
   createdAt: string;
+  senderId?: string;
 };
