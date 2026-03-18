@@ -5,13 +5,13 @@ import CoinTransaction from "@/models/coinTransaction";
 
 export async function GET(req: Request) {
   try {
-
     await dbConnect();
 
-    const user = requireAuth(req);
+    const auth = requireAuth(req);
+    if (auth instanceof Response) return auth;
 
     const transactions = await CoinTransaction
-      .find({ userId: user.id })
+      .find({ userId: auth.id })
       .sort({ createdAt: -1 });
 
     return NextResponse.json(transactions);
