@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { load } from "@cashfreepayments/cashfree-js";
 
 type CoinPackage = {
   id: string;
@@ -41,16 +42,19 @@ export default function BuyCoinsPage() {
         return;
       }
 
-      const cashfree = new window.Cashfree({
-        mode: "sandbox",
+      // ✅ LOAD SDK (CORRECT WAY)
+      const cashfree = await load({
+        mode:
+          process.env.NEXT_PUBLIC_CASHFREE_ENV === "PRODUCTION"
+            ? "production"
+            : "sandbox",
       });
 
-      cashfree.checkout({
+      await cashfree.checkout({
         paymentSessionId: data.paymentSessionId,
         redirectTarget: "_self",
-        // redirectTarget: "_modal",
-
       });
+
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
