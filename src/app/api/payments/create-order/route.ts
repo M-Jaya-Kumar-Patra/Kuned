@@ -7,11 +7,8 @@ import { requireAuth } from "@/lib/requireAuth";
 export async function POST(req: Request) {
   await dbConnect();
 
-  const auth = requireAuth(req); if (auth instanceof Response) return auth;
-
-  if (auth instanceof NextResponse) {
-    return auth;
-  }
+  const auth = requireAuth(req);
+  if (auth instanceof Response) return auth;
 
   const userId = auth.id;
 
@@ -31,6 +28,12 @@ export async function POST(req: Request) {
 
   const orderId = "order_" + crypto.randomUUID();
 
+  // ✅ ENV BASED URL
+  const CASHFREE_BASE_URL =
+    process.env.CASHFREE_ENV === "PRODUCTION"
+      ? "https://api.cashfree.com"
+      : "https://sandbox.cashfree.com";
+
   const orderRequest = {
     order_id: orderId,
     order_amount: pkg.price,
@@ -39,17 +42,17 @@ export async function POST(req: Request) {
     customer_details: {
       customer_id: userId,
       customer_email: auth.email || "test@gmail.com",
-      customer_phone: "9999999999",
+      customer_phone: auth.phone || "9999999999"
     },
 
     order_meta: {
-    notify_url: "https://nonstarting-joya-unexamined.ngrok-free.dev/api/payments/webhook",
-  return_url: `http://localhost:3000/payment-status?orderId=${orderId}`
-  }
+      notify_url: process.env.WEBHOOK_URL!,
+      return_url: `${process.env.NEXT_PUBLIC_SITE_URL}/payment-status?orderId=${orderId}`,
+    },
   };
 
   try {
-    const response = await fetch("https://sandbox.cashfree.com/pg/orders", {
+    const response = await fetch(`${CASHFREE_BASE_URL}/pg/orders`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -63,11 +66,11 @@ export async function POST(req: Request) {
     const data = await response.json();
 
     if (!data.payment_session_id) {
-      console.error("Missing session id:", data);
+      console.error("❌ Cashfree error:", data);
 
       return NextResponse.json(
-        { error: "Invalid Cashfree response" },
-        { status: 500 },
+        { error: "Failed to create payment session" },
+        { status: 500 }
       );
     }
 
@@ -77,18 +80,19 @@ export async function POST(req: Request) {
       amount: pkg.price,
       coins: pkg.coins,
       status: "initiated",
-      paymentSessionId: data.payment_session_id, // optional
+      paymentSessionId: data.payment_session_id,
     });
 
     return NextResponse.json({
       paymentSessionId: data.payment_session_id,
     });
+
   } catch (error) {
-    console.error("Cashfree error:", error);
+    console.error("❌ Cashfree request failed:", error);
 
     return NextResponse.json(
       { error: "Cashfree order creation failed" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

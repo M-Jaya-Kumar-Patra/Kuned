@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 type AuthUser = {
   id: string;
   email?: string;
+  phone?: number;
 };
 
 export function requireAuth(req: Request): AuthUser | NextResponse {

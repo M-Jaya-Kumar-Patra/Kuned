@@ -3,7 +3,7 @@ export const coinPackages = [
 {
     id: "starter",
     coins: 10,
-    price: 49
+    price: 1
 },
 
 {
