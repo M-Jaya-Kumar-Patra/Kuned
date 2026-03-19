@@ -5,7 +5,6 @@ import { dbConnect } from "@/lib/dbConnect";
 import User from "@/models/User";
 import { sendEmail } from "@/lib/email";
 import { loginAlertEmail } from "@/lib/emailTemplates/loginAlertEmail";
-
 import { createToken } from "@/lib/jwt";
 
 export async function POST(req: Request) {
@@ -14,39 +13,50 @@ export async function POST(req: Request) {
 
     const { email, password } = await req.json();
 
+    // 🔍 Validate input
+    if (!email || !password) {
+      return NextResponse.json(
+        { message: "Email and password are required" },
+        { status: 400 }
+      );
+    }
+
     const user = await User.findOne({ email });
 
     if (!user) {
       return NextResponse.json(
         { message: "Invalid credentials" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
+    // 🚫 Check banned user
     if (user.banned) {
       return NextResponse.json(
         { message: "Your account has been banned" },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
+    // 🚫 Prevent password login for Google users
     if (user.provider === "google") {
-  return NextResponse.json(
-    { message: "Please login using Google" },
-    { status: 400 }
-  );
-}
+      return NextResponse.json(
+        { message: "Please login using Google" },
+        { status: 400 }
+      );
+    }
 
-
+    // 🔐 Check password
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
       return NextResponse.json(
         { message: "Invalid credentials" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
+    // 📧 Check email verification
     if (!user.emailVerified) {
       return NextResponse.json(
         {
@@ -54,21 +64,28 @@ export async function POST(req: Request) {
           emailVerificationRequired: true,
           email: user.email,
         },
-        { status: 403 },
+        { status: 403 }
       );
     }
 
+    // 🎟 Generate JWT
     const token = createToken({
       id: user._id,
       email: user.email,
     });
 
-    await sendEmail({
-      to: user.email,
-      subject: "New Login Alert",
-      html: loginAlertEmail(user.name),
-    });
+    // 📩 Send login alert (non-blocking)
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "New Login Alert 🔐",
+        html: loginAlertEmail(user.name),
+      });
+    } catch (err) {
+      console.error("Email failed but login continues:", err);
+    }
 
+    // ✅ Success response
     return NextResponse.json({
       message: "Login successful",
       token,
@@ -82,10 +99,13 @@ export async function POST(req: Request) {
         isAdmin: user.isAdmin,
       },
     });
+
   } catch (error) {
+    console.error("Login error:", error);
+
     return NextResponse.json(
-      { message: "Login failed", error },
-      { status: 500 },
+      { message: "Login failed" },
+      { status: 500 }
     );
   }
 }

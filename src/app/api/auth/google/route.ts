@@ -5,6 +5,10 @@ import User from "@/models/User";
 import { createToken } from "@/lib/jwt";
 import { generateReferralCode } from "@/lib/generateReferralCode";
 
+// ✅ ADD THESE
+import { sendEmail } from "@/lib/email";
+import { loginAlertEmail } from "@/lib/emailTemplates/loginAlertEmail";
+
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 export async function POST(req: Request) {
@@ -20,17 +24,14 @@ export async function POST(req: Request) {
 
     const payload = ticket.getPayload();
 
-    console.log("Payload:", payload);
-    
     const email = payload?.email;
-const name = payload?.name || "Google User";
-const picture = payload?.picture || "";
+    const name = payload?.name || "Google User";
+    const picture = payload?.picture || "";
 
     let user = await User.findOne({ email });
 
-    const refCode = generateReferralCode()
+    const refCode = generateReferralCode();
 
-    console.log("User found:", user);
     // 🆕 NEW USER
     if (!user) {
       user = await User.create({
@@ -40,7 +41,7 @@ const picture = payload?.picture || "";
         provider: "google",
         password: null,
         referralCode: refCode,
-        emailVerified: true, // 🔥 already verified by Google
+        emailVerified: true,
       });
     }
 
@@ -52,6 +53,7 @@ const picture = payload?.picture || "";
       await user.save();
     }
 
+    // 🚫 banned check
     if (user.banned) {
       return NextResponse.json(
         { message: "Account banned" },
@@ -59,11 +61,22 @@ const picture = payload?.picture || "";
       );
     }
 
-    // 🔐 SAME JWT SYSTEM
+    // 🔐 JWT
     const token = createToken({
       id: user._id,
       email: user.email,
     });
+
+    // 📩 SEND LOGIN EMAIL (NON-BLOCKING)
+    try {
+      await sendEmail({
+        to: user.email,
+        subject: "New Google Login Alert 🔐",
+        html: loginAlertEmail(user.name),
+      });
+    } catch (err) {
+      console.error("Email failed but login continues:", err);
+    }
 
     return NextResponse.json({
       message: "Google login successful",
@@ -80,20 +93,20 @@ const picture = payload?.picture || "";
     });
 
   } catch (error) {
-  console.log("🔥 GOOGLE ERROR:", error);
+    console.log("🔥 GOOGLE ERROR:", error);
 
-  let message = "Unknown error";
+    let message = "Unknown error";
 
-  if (error instanceof Error) {
-    message = error.message;
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    return NextResponse.json(
+      {
+        message: "Google auth failed",
+        error: message,
+      },
+      { status: 500 }
+    );
   }
-
-  return NextResponse.json(
-    {
-      message: "Google auth failed",
-      error: message,
-    },
-    { status: 500 }
-  );
-}
 }
