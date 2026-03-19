@@ -3,34 +3,15 @@ import { dbConnect } from "@/lib/dbConnect";
 import Payment from "@/models/Payment";
 import User from "@/models/User";
 import CoinTransaction from "@/models/coinTransaction";
-import crypto from "crypto";
+
 
 export async function POST(req: Request) {
   await dbConnect();
 
   try {
-    // ✅ STEP 1: get RAW body (important for signature)
-    const body = await req.text();
-
-    // ✅ STEP 2: VERIFY SIGNATURE (ADD HERE)
-    const signature = req.headers.get("x-webhook-signature");
-    const secret = process.env.CASHFREE_WEBHOOK_SECRET!;
-
-    const expectedSignature = crypto
-      .createHmac("sha256", secret)
-      .update(body)
-      .digest("base64");
-
-    if (signature !== expectedSignature) {
-      console.log("❌ Invalid webhook signature");
-      return NextResponse.json(
-        { error: "Invalid signature" },
-        { status: 400 }
-      );
-    }
-
+    
     // ✅ STEP 3: now parse JSON (AFTER verification)
-    const data = JSON.parse(body);
+    const data = await req.json();
 
     const orderId = data?.data?.order?.order_id?.trim();
     const status = data?.data?.payment?.payment_status;

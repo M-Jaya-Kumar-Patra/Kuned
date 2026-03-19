@@ -10,29 +10,30 @@ export default function PaymentStatusContent() {
   const [status, setStatus] = useState("loading");
 
   useEffect(() => {
-    const checkPayment = async () => {
-      const orderId = searchParams.get("orderId");
+  const orderId = searchParams.get("orderId");
 
-      if (!orderId) {
-        router.replace("/");
-        return;
-      }
+  if (!orderId) {
+    router.replace("/");
+    return;
+  }
 
-      const res = await fetch(`/api/payments/verify?orderId=${orderId}`);
-      const data = await res.json();
+  const interval = setInterval(async () => {
+    const res = await fetch(`/api/payments/verify?orderId=${orderId}`);
+    const data = await res.json();
 
-      if (data.status === "success") {
-        setStatus("success");
-      } else if (data.status === "failed") {
-        setStatus("failed");
-      } else {
-        setStatus("pending");
-      }
-    };
+    if (data.status === "success") {
+      setStatus("success");
+      clearInterval(interval);
+    } else if (data.status === "failed") {
+      setStatus("failed");
+      clearInterval(interval);
+    } else {
+      setStatus("pending");
+    }
+  }, 2000); // every 2 sec
 
-    checkPayment();
-  }, [searchParams, router]);
-
+  return () => clearInterval(interval);
+}, [searchParams, router]);
   if (status === "loading") {
     return <div className="h-screen flex items-center justify-center">Checking...</div>;
   }
@@ -55,7 +56,7 @@ export default function PaymentStatusContent() {
 
   return (
     <div className="h-screen flex items-center justify-center">
-      Processing payment...
+      Processing payment... Please wait ⏳
     </div>
   );
 }

@@ -9,23 +9,17 @@ export async function GET(req: Request) {
   const orderId = searchParams.get("orderId");
 
   if (!orderId) {
-    return NextResponse.json({ success: false, status: "invalid" });
+    return NextResponse.json({ status: "invalid" });
   }
 
   const payment = await Payment.findOne({ orderId });
 
   if (!payment) {
-    return NextResponse.json({ success: false, status: "not_found" });
+    return NextResponse.json({ status: "pending" });
   }
 
-  // 🔥 AUTO FIX PENDING → FAILED (IMPORTANT)
-  if (payment.status === "initiated") {
-    payment.status = "failed";
-    await payment.save();
-  }
-
+  // ✅ DO NOT MODIFY STATUS HERE
   return NextResponse.json({
-    success: payment.status === "success",
-    status: payment.status
+    status: payment.status, // initiated | success | failed
   });
 }
