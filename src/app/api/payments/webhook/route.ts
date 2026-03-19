@@ -3,57 +3,63 @@ import { dbConnect } from "@/lib/dbConnect";
 import Payment from "@/models/Payment";
 import User from "@/models/User";
 import CoinTransaction from "@/models/coinTransaction";
+import crypto from "crypto";
 
 export async function POST(req: Request) {
   await dbConnect();
 
   try {
-    const data = await req.json();
+    // ✅ STEP 1: get RAW body (important for signature)
+    const body = await req.text();
 
-    console.log("🔥 FULL WEBHOOK DATA:", JSON.stringify(data, null, 2));
+    // ✅ STEP 2: VERIFY SIGNATURE (ADD HERE)
+    const signature = req.headers.get("x-webhook-signature");
+    const secret = process.env.CASHFREE_WEBHOOK_SECRET!;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", secret)
+      .update(body)
+      .digest("base64");
+
+    if (signature !== expectedSignature) {
+      console.log("❌ Invalid webhook signature");
+      return NextResponse.json(
+        { error: "Invalid signature" },
+        { status: 400 }
+      );
+    }
+
+    // ✅ STEP 3: now parse JSON (AFTER verification)
+    const data = JSON.parse(body);
 
     const orderId = data?.data?.order?.order_id?.trim();
     const status = data?.data?.payment?.payment_status;
-
-    console.log("OrderId:", orderId);
-    console.log("Status:", status);
 
     if (!orderId) {
       return NextResponse.json({ error: "Invalid webhook" }, { status: 400 });
     }
 
-    // 🔥 ATOMIC UPDATE (MOST IMPORTANT FIX)
-    const payment = await Payment.findOneAndUpdate(
-      {
-        orderId,
-        status: { $ne: "success" } // only update if NOT already success
-      },
-      {
-        $set: { status: "success" }
-      },
-      { new: true }
-    );
+    const payment = await Payment.findOne({ orderId });
 
-    // 👉 If null → already processed
     if (!payment) {
-      console.log("⚠️ Already processed or payment not found");
+      return NextResponse.json({ error: "Payment not found" }, { status: 404 });
+    }
+
+    if (payment.status === "success") {
       return NextResponse.json({ message: "Already processed" });
     }
 
     if (status === "SUCCESS") {
-      console.log("✅ SUCCESS");
+      await Payment.updateOne(
+        { orderId },
+        { $set: { status: "success" } }
+      );
 
-      // 🔥 ADD COINS
       await User.findByIdAndUpdate(payment.userId, {
         $inc: { paidCoins: payment.coins }
       });
 
-      // 🔥 EXTRA SAFETY (prevent duplicate transactions)
-      const existingTx = await CoinTransaction.findOne({
-        userId: payment.userId,
-        amount: payment.coins,
-        source: "coin_purchase"
-      });
+      const existingTx = await CoinTransaction.findOne({ orderId });
 
       if (!existingTx) {
         await CoinTransaction.create({
@@ -61,30 +67,23 @@ export async function POST(req: Request) {
           amount: payment.coins,
           coinType: "paid",
           transactionType: "earn",
-          source: "coin_purchase"
+          source: "coin_purchase",
+          orderId
         });
-
-        console.log("🎉 Coins added!");
-      } else {
-        console.log("⚠️ Duplicate transaction prevented");
       }
     }
-    else if (status === "FAILED") {
-  console.log("❌ Payment FAILED");
 
-  await Payment.findOneAndUpdate(
-    { orderId },
-    { $set: { status: "failed" } }
-  );
-}
-else {
-  console.log("⚠️ Unknown status:", status);
-}
+    if (status === "FAILED") {
+      await Payment.updateOne(
+        { orderId },
+        { $set: { status: "failed" } }
+      );
+    }
 
     return NextResponse.json({ success: true });
 
   } catch (error) {
-    console.error("❌ Webhook error:", error);
+    console.error("Webhook error:", error);
 
     return NextResponse.json(
       { error: "Webhook processing failed" },
