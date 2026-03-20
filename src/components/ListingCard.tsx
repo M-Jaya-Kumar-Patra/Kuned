@@ -11,6 +11,7 @@ type Listing = {
   topListing?: boolean;
   urgentSale?: boolean;
   isHighlighted?: boolean;
+  status?: "active" | "sold"; 
 };
 
 type Props = {
@@ -18,6 +19,8 @@ type Props = {
 };
 
 export default function ListingCard({ item }: Props) {
+  if (item?.status === "sold") return null; 
+  
   return (
     <Link href={`/item/${item.slug}`}>
       <div

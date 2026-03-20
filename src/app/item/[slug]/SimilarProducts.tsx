@@ -23,7 +23,6 @@ export default function SimilarProducts({ listingId }: { listingId: string }) {
 
       try {
 
-        console.log("listingId________________-----------",)
 
         const res = await api.get(`/listings/similar/${listingId}`);
 

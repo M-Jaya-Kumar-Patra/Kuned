@@ -27,7 +27,7 @@ async function getListing(slug: string) {
 export default async function ItemPage({
   params
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
 
   const { slug } = await params;
@@ -91,7 +91,7 @@ export default async function ItemPage({
             {listing.location}
           </p>
 
-          <p className="text-2xl font-semibold mt-4 text-green-600">
+          <p className="text-3xl font-bold mt-4 text-green-600 tracking-tight">
             ₹{listing.price}
           </p>
 

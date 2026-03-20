@@ -111,6 +111,8 @@ export default function ChatPage() {
       <h1 className="text-2xl font-bold mb-6">Chats</h1>
 
       <div className="space-y-3">
+
+        
         {conversations.sort((a, b) => 
     new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   )
@@ -125,7 +127,14 @@ export default function ChatPage() {
               onClick={() => router.push(`/chat/${conv._id}`)}
               className="p-4 border rounded cursor-pointer hover:bg-gray-50"
             >
-              <div className="flex justify-between items-center">
+
+              <div className="flex items-center gap-3">
+  <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center">
+    {otherUser?.name?.charAt(0)}
+  </div>
+
+  <div>
+    <div className="flex justify-between items-center">
                 <p className="font-semibold">{otherUser?.name}</p>
 
                 {conv.unseenCount > 0 && (
@@ -133,11 +142,17 @@ export default function ChatPage() {
                     {conv.unseenCount}
                   </span>
                 )}
+
+
+                
               </div>
 
               <p className="text-sm text-gray-500">
                 {conv.listingId?.title}
               </p>
+  </div>
+</div>
+              
             </div>
           );
         })}
