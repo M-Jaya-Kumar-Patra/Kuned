@@ -44,8 +44,6 @@ export default function BuyCoinsPage() {
         return;
       }
 
-      console.log("casssssssssssssssshhhhhhh",  process.env.NEXT_PUBLIC_CASHFREE_ENV)
-
 
       // ✅ LOAD SDK (CORRECT WAY)
       const cashfree = await load({
@@ -55,9 +53,6 @@ export default function BuyCoinsPage() {
             : "sandbox",
       });
 
-
-      console.log("casssssssssssssssshhhhhhh",  cashfree)
-      console.log("iiiiiiiiiiiiiiiiiiidddddddddd",  data)
 
       await cashfree.checkout({
         paymentSessionId: data.paymentSessionId,

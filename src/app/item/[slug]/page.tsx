@@ -43,9 +43,6 @@ export default async function ItemPage({
     <div>
 <TrackView listingId={listing._id.toString()} />
 
-
-      <Navbar />
-
       <div className="max-w-6xl mx-auto p-6 grid md:grid-cols-2 gap-10">
 
         {/* Image */}

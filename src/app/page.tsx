@@ -2,8 +2,12 @@
 
 import { useEffect, useState } from "react";
 import api from "@/services/api";
-import ListingCard from "@/components/ListingCard";
-import Navbar from "@/components/Navbar";
+
+// Components (you will design later)
+import HeroSection from "@/components/home/HeroSection";
+import CategorySection from "@/components/home/CategorySection";
+import FeaturedListings from "@/components/home/FeaturedListings";
+import DealsSection from "@/components/home/DealsSection";
 import RecentlyViewed from "@/components/ReccentlyViewed";
 
 type Listing = {
@@ -13,20 +17,16 @@ type Listing = {
   location: string;
   slug: string;
   images: string[];
-
   topListing?: boolean;
   urgentSale?: boolean;
   isHighlighted?: boolean;
 };
 
 export default function HomePage() {
-
   const [listings, setListings] = useState<Listing[]>([]);
 
   useEffect(() => {
-
     const fetchListings = async () => {
-
       const res = await api.get("/listings");
       const data: Listing[] = res.data.listings;
 
@@ -39,47 +39,41 @@ export default function HomePage() {
         (l) => !l.topListing && !l.urgentSale && !l.isHighlighted
       );
 
-      // Randomize top and urgent
       topListings.sort(() => Math.random() - 0.5);
       urgentListings.sort(() => Math.random() - 0.5);
 
-      const finalListings = [
+      setListings([
         ...topListings,
         ...urgentListings,
         ...highlightListings,
-        ...normalListings
-      ];
-
-      setListings(finalListings);
+        ...normalListings,
+      ]);
     };
 
     fetchListings();
-
   }, []);
 
   return (
-    <div>
+    <div className="bg-gray-50 min-h-screen">
 
-      <Navbar />
+      {/* HERO */}
+      <HeroSection />
 
-      <div className="max-w-6xl mx-auto p-6">
+      <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
 
-        <h1 className="text-2xl font-bold mb-4">
-          Latest Listings
-        </h1>
+        {/* CATEGORIES */}
+        <CategorySection />
 
-        <div className="grid grid-cols-4 gap-6">
+        {/* FEATURED */}
+        <FeaturedListings listings={listings} />
 
-          {listings.map((item) => (
-            <ListingCard key={item._id} item={item} />
-          ))}
-
-
-        </div>
+        {/* DEALS (Urgent + Latest side by side) */}
+        <DealsSection listings={listings} />
 
       </div>
-          <RecentlyViewed />
 
+      {/* RECENT */}
+      <RecentlyViewed />
     </div>
   );
 }
