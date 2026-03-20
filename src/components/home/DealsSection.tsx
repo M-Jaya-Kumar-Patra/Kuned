@@ -1,8 +1,15 @@
 import ListingCard from "@/components/ListingCard";
+import type { Listing } from "@/types/listing";
 
-export default function DealsSection({ listings }: any) {
+type Props = {
+  listings: Listing[];
+};
 
-  const urgent = listings.filter((l: any) => l.urgentSale).slice(0, 6);
+
+
+export default function DealsSection({ listings }: Props) {
+
+  const urgent = listings.filter((l) => l.urgentSale).slice(0, 6);
   const latest = listings.slice(0, 6);
 
   return (
@@ -16,7 +23,7 @@ export default function DealsSection({ listings }: any) {
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          {urgent.map((item: any) => (
+          {urgent.map((item) => (
             <ListingCard key={item._id} item={item} />
           ))}
         </div>
@@ -30,7 +37,7 @@ export default function DealsSection({ listings }: any) {
         </div>
 
         <div className="grid grid-cols-3 gap-4">
-          {latest.map((item: any) => (
+          {latest.map((item) => (
             <ListingCard key={item._id} item={item} />
           ))}
         </div>

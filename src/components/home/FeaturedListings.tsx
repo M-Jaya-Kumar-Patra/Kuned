@@ -1,6 +1,11 @@
 import ListingCard from "@/components/ListingCard";
+import type { Listing } from "@/types/listing";
 
-export default function FeaturedListings({ listings }: any) {
+type Props = {
+  listings: Listing[];
+};
+
+export default function FeaturedListings({ listings }: Props) {
 
   const featured = listings.slice(0, 6);
 
@@ -12,7 +17,7 @@ export default function FeaturedListings({ listings }: any) {
       </div>
 
       <div className="grid grid-cols-5 gap-4">
-        {featured.map((item: any) => (
+        {featured.map((item) => (
           <ListingCard key={item._id} item={item} />
         ))}
       </div>
