@@ -25,7 +25,7 @@ const categories = [
 
 export default function CategorySection() {
   return (
-    <div className="mt-12">
+    <div className="mt-12 ">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">

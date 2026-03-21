@@ -5,13 +5,14 @@ export default function HeroSection() {
   return (
    <div className="relative py-16 overflow-hidden">
 
-  {/* RIGHT GLOW */}
-  <div className="absolute right-[-100px] top-[-100px] w-[500px] h-[500px]
-  rounded-full" />
+    <div className="absolute inset-0 pointer-events-none z-0 flex  justify-center">
+  <img
+    src="/images/hero_shade.png"
+    alt="hero shade"
+    className="w-[100vw] h-[130%] object-cover opacity-20"
+  />
+</div>
 
-  {/* BOTTOM FADE (IMPORTANT) */}
-  <div className="absolute bottom-0 left-0 w-full h-32 
-    " />
 
   <div className="max-w-5xl mx-auto text-center relative z-10">
 
