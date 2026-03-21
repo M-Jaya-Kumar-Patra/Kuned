@@ -5,12 +5,24 @@ export default function HeroSection() {
   return (
    <div className="relative py-16 overflow-hidden">
 
-    <div className="absolute inset-0 pointer-events-none z-0 flex  justify-center">
+  <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center">
+
   <img
     src="/images/hero_shade.png"
     alt="hero shade"
-    className="w-[100vw] h-[130%] object-cover opacity-20"
+    className="
+      absolute
+      left-1/2 top-1/2
+      -translate-x-1/2 -translate-y-1/2
+
+      h-[130%]
+      max-w-none
+
+      opacity-30
+      blur-[2px]
+    "
   />
+
 </div>
 
 
