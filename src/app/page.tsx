@@ -54,7 +54,23 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+  <div className="relative min-h-screen overflow-hidden 
+    bg-gradient-to-br from-[#f5f7fb] via-[#eef2ff] to-[#f9fafb]">
+
+    {/* 🔵 Top Right Glow */}
+    <div
+      className="absolute top-[-150px] right-[-150px] w-[500px] h-[500px]
+      bg-blue-400 opacity-20 blur-[120px] rounded-full"
+    />
+
+    {/* 🟣 Bottom Left Glow */}
+    <div
+      className="absolute bottom-[-150px] left-[-150px] w-[400px] h-[400px]
+      bg-purple-300 opacity-20 blur-[120px] rounded-full"
+    />
+
+    {/* CONTENT */}
+    <div className="relative z-10">
 
       {/* HERO */}
       <HeroSection />
@@ -67,7 +83,7 @@ export default function HomePage() {
         {/* FEATURED */}
         <FeaturedListings listings={listings} />
 
-        {/* DEALS (Urgent + Latest side by side) */}
+        {/* DEALS */}
         <DealsSection listings={listings} />
 
       </div>
@@ -75,5 +91,6 @@ export default function HomePage() {
       {/* RECENT */}
       <RecentlyViewed />
     </div>
-  );
+  </div>
+);
 }
