@@ -108,102 +108,205 @@ export default function CreateListingPage() {
 
 
   return (
-    <div>
+  <div className="min-h-screen bg-gradient-to-b from-[#f5f7ff] to-[#eef1ff]">
 
-      <div className="max-w-xl mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-6">Create Listing</h1>
+    {/* Top spacing */}
+    <div className="max-w-6xl mx-auto px-6 py-10">
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            name="title"
-            placeholder="Title"
-            className="w-full border p-2"
-            onChange={handleChange}
-          />
+      {/* Title */}
+      <h1 className="text-3xl font-semibold text-gray-800">
+        Create a New Listing
+      </h1>
+      <p className="text-gray-500 mt-1">
+        Sell your items quickly within your campus
+      </p>
 
-          <input
-            name="description"
-            placeholder="Description"
-            className="w-full border p-2"
-            onChange={handleChange}
-          />
+      {/* Main Card */}
+      <div className="
+        mt-8
+        bg-white/70 backdrop-blur-xl
+        border border-white/40
+        rounded-3xl
+        shadow-sm
+        overflow-hidden
+      ">
 
-          <input
-            name="price"
-            type="number"
-            placeholder="Price"
-            className="w-full border p-2"
-            onChange={handleChange}
-          />
+        <form onSubmit={handleSubmit}>
 
-          {/* Category dropdown */}
+          {/* BASIC INFO */}
+          <div className="p-6 border-b">
+            <h2 className="font-semibold text-gray-700 mb-4">
+              Basic Info <span className="text-red-500">*</span>
+            </h2>
 
-          <select
-            name="category"
-            className="w-full border p-2"
-            onChange={handleChange}
-          >
-            <option value="">Select Category</option>
-            <option value="Electronics">Electronics</option>
-            <option value="Furniture">Furniture</option>
-            <option value="Books">Books</option>
-            <option value="Cycles">Cycles</option>
-            <option value="Hostel Items">Hostel Items</option>
-          </select>
+            <input
+              name="title"
+              placeholder="e.g. Study Table in Good Condition"
+              className="w-full p-3 rounded-xl border bg-white/60 outline-none mb-4 text-gray-800
+  placeholder:text-gray-400"
+              onChange={handleChange}
+            />
 
-          <input
-            name="location"
-            placeholder="Location"
-            className="w-full border p-2"
-            onChange={handleChange}
-          />
+            <textarea
+              name="description"
+              placeholder="Describe your item..."
+              className="w-full p-3 rounded-xl border bg-white/60 outline-none h-28 text-gray-800
+  placeholder:text-gray-400"
+              onChange={handleChange}
+            />
+          </div>
 
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleImageChange}
-          />
+          {/* GRID SECTION */}
+          <div className="grid md:grid-cols-2">
 
-          {uploading && (
-  <p className="text-sm text-gray-500">
-    Uploading images...
-  </p>
-)}
+            {/* LEFT SIDE */}
+            <div className="p-6 space-y-6 border-r">
 
-          <div className="flex gap-3 flex-wrap">
+              {/* Price */}
+              <div>
+                <h3 className="text-sm text-gray-600 mb-2">
+                  Price
+                </h3>
 
-  {images.map((img, index) => (
+                <input
+                  name="price"
+                  type="number"
+                  placeholder="₹ Price"
+                  className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800
+  placeholder:text-gray-400"
+                  onChange={handleChange}
+                />
+              </div>
 
-    <div key={index} className="relative">
+              {/* Category */}
+              <div>
+                <h3 className="text-sm text-gray-600 mb-2">
+                  Category
+                </h3>
 
-      <img
-        src={img}
-        className="w-24 h-24 object-cover rounded border"
-      />
+                <select
+                  name="category"
+                  className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800
+  "
+                  onChange={handleChange}
+                >
+                  <option value="">Select Category</option>
+                  <option>Electronics</option>
+                  <option>Furniture</option>
+                  <option>Books</option>
+                  <option>Cycles</option>
+                  <option>Hostel Items</option>
+                </select>
+              </div>
 
-      <button
-        type="button"
-        onClick={() => removeImage(index)}
-        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-sm"
-      >
-        ×
-      </button>
+              {/* Location */}
+              <div>
+                <h3 className="text-sm text-gray-600 mb-2">
+                  Location
+                </h3>
 
-    </div>
+                <input
+                  name="location"
+                  placeholder="e.g. Pulaha HOR, VSSUT"
+                  className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800
+  placeholder:text-gray-400"
+                  onChange={handleChange}
+                />
+              </div>
 
-  ))}
+            </div>
 
-</div>
+            {/* RIGHT SIDE (UPLOAD) */}
+            <div className="p-6">
 
-          <button
-  disabled={uploading}
-  className="bg-black text-white px-4 py-2 disabled:opacity-50"
->
-            Create Listing
-          </button>
+              <h3 className="text-gray-700 font-semibold mb-3">
+                Image Upload
+              </h3>
+
+              {/* Upload Box */}
+              <label className="
+                flex flex-col items-center justify-center
+                border-2 border-dashed rounded-2xl
+                h-40 cursor-pointer
+                text-gray-500 hover:bg-gray-50 transition
+              ">
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+
+                ⬆️ Drag & drop or click to upload
+                <span className="text-xs mt-1">
+                  JPEG or PNG (max 5MB)
+                </span>
+              </label>
+
+              {/* Uploading */}
+              {uploading && (
+                <p className="text-sm text-gray-500 mt-2">
+                  Uploading images...
+                </p>
+              )}
+
+              {/* Preview */}
+              <div className="flex gap-3 flex-wrap mt-4">
+
+                {images.map((img, index) => (
+                  <div key={index} className="relative">
+
+                    <img
+                      src={img}
+                      className="w-24 h-24 object-cover rounded-xl border"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-6 h-6 text-sm"
+                    >
+                      ×
+                    </button>
+
+                  </div>
+                ))}
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* SUBMIT */}
+          <div className="p-6 border-t">
+
+            <button
+              disabled={uploading}
+              className="
+                w-full
+                py-3
+                rounded-xl
+                text-white
+                font-medium
+                bg-gradient-to-r from-indigo-600 to-purple-500
+                hover:opacity-90
+                transition
+                disabled:opacity-50
+              "
+            >
+              Post Listing
+            </button>
+
+          </div>
+
         </form>
+
       </div>
+
     </div>
-  );
+
+  </div>
+);
 }

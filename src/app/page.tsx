@@ -9,6 +9,8 @@ import CategorySection from "@/components/home/CategorySection";
 import FeaturedListings from "@/components/home/FeaturedListings";
 import DealsSection from "@/components/home/DealsSection";
 import RecentlyViewed from "@/components/ReccentlyViewed";
+import Footer from "@/components/Footer";
+import SellCTA from "@/components/home/SellCTA";
 
 type Listing = {
   _id: string;
@@ -86,10 +88,12 @@ export default function HomePage() {
         {/* DEALS */}
         <DealsSection listings={listings} />
 
+        <SellCTA/>
+
+      <RecentlyViewed />
       </div>
 
-      {/* RECENT */}
-      <RecentlyViewed />
+<Footer/>
     </div>
   </div>
 );

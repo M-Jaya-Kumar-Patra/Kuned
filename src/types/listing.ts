@@ -8,4 +8,5 @@ export type Listing = {
   topListing?: boolean;
   urgentSale?: boolean;
   isHighlighted?: boolean;
+  status: "active" | "sold";
 };
