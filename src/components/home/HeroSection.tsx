@@ -1,7 +1,38 @@
+"use client"
 import { Search, Menu } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+
+type Listing = {
+  _id: string;
+  title: string;
+  price: number;
+  slug: string;
+  images: string[];
+  location: string;
+  category: string;
+};
 
 
 export default function HeroSection() {
+
+   const router = useRouter();
+
+  const [keyword, setKeyword] = useState("");
+  const [location, setLocation] = useState("");
+
+  const handleSearch = () => {
+
+    const query = new URLSearchParams({
+      keyword,
+      location
+    }).toString();
+
+    router.push(`/search?${query}`);
+  };
+
+
   return (
    <div className="relative py-16 overflow-hidden">
 
@@ -55,11 +86,15 @@ export default function HeroSection() {
           placeholder="Search for items..."
           className="w-full bg-transparent outline-none 
           text-white placeholder-white/80 text-[15px]"
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
         />
       </div>
 
       {/* Search Button */}
-      <button className="h-[56px] px-8 rounded-xl 
+      <button 
+      onClick={handleSearch}
+      className="h-[56px] px-8 rounded-xl 
       bg-gradient-to-r from-indigo-500 to-blue-600 
       text-white font-medium text-[15px] shadow-sm hover:opacity-95 transition">
         Search

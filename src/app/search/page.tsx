@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import api from "@/services/api";
 import ListingCard from "@/components/ListingCard";
+import { useSearchParams } from "next/navigation";
 
 type Listing = {
   _id: string;
@@ -16,12 +17,52 @@ type Listing = {
 
 export default function SearchPage() {
 
+  const searchParams = useSearchParams();
+
   const [listings, setListings] = useState<Listing[]>([]);
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
   const [category, setCategory] = useState("");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+
+
+
+  useEffect(() => {
+
+  const keywordParam = searchParams.get("keyword") || "";
+  const locationParam = searchParams.get("location") || "";
+
+  if (keywordParam !== keyword) setKeyword(keywordParam);
+  if (locationParam !== location) setLocation(locationParam);
+
+  const fetchListings = async () => {
+
+    try {
+
+      const res = await api.get("/listings", {
+        params: {
+          keyword: keywordParam,
+          location: locationParam
+        }
+      });
+
+      setListings(res.data.listings || []);
+
+    } catch (error) {
+      console.error("Search failed", error);
+    }
+
+  };
+
+  fetchListings();
+
+}, [searchParams]);
+
+  
+
+
+
 
   const searchListings = async () => {
 
