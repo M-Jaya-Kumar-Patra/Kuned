@@ -14,7 +14,6 @@ export async function GET(req: Request) {
     
     const { searchParams } = new URL(req.url);
     
-    console.log("rrrrrrrrrrrrrrrrrrrrrrr: ", searchParams)
     const keyword = searchParams.get("keyword");
     const category = searchParams.get("category");
     const location = searchParams.get("location");

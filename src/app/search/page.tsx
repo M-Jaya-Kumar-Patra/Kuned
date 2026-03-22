@@ -28,13 +28,15 @@ export default function SearchPage() {
 
 
 
-  useEffect(() => {
+ useEffect(() => {
 
   const keywordParam = searchParams.get("keyword") || "";
   const locationParam = searchParams.get("location") || "";
+  const categoryParam = searchParams.get("category") || "";
 
-  if (keywordParam !== keyword) setKeyword(keywordParam);
-  if (locationParam !== location) setLocation(locationParam);
+  setKeyword(keywordParam);
+  setLocation(locationParam);
+  setCategory(categoryParam);
 
   const fetchListings = async () => {
 
@@ -43,7 +45,8 @@ export default function SearchPage() {
       const res = await api.get("/listings", {
         params: {
           keyword: keywordParam,
-          location: locationParam
+          location: locationParam,
+          category: categoryParam
         }
       });
 
@@ -58,9 +61,6 @@ export default function SearchPage() {
   fetchListings();
 
 }, [searchParams]);
-
-  
-
 
 
 
@@ -88,28 +88,6 @@ export default function SearchPage() {
 
   };
 
-  // Initial load
-  useEffect(() => {
-
-    const fetchInitialListings = async () => {
-
-      try {
-
-        const res = await api.get("/listings");
-
-        setListings(Array.isArray(res.data.listings) ? res.data.listings : []);
-
-      } catch (error) {
-
-        console.error("Failed to fetch listings", error);
-
-      }
-
-    };
-
-    fetchInitialListings();
-
-  }, []);
 
   return (
     <div className="max-w-6xl mx-auto p-6">

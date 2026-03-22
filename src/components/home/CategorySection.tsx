@@ -1,29 +1,28 @@
+"use client";
+
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 const categories = [
-  {
-    name: "Books",
-    image: "/icons/books.png",
-  },
-  {
-    name: "Electronics",
-    image: "/icons/laptop.png",
-  },
-  {
-    name: "Furniture",
-    image: "/icons/chair.png",
-  },
-  {
-    name: "Fashion",
-    image: "/icons/tshirt.png",
-  },
-  {
-    name: "Others",
-    image: "/icons/box.png",
-  },
+  { name: "Books", image: "/icons/books.png" },
+  { name: "Electronics", image: "/icons/laptop.png" },
+  { name: "Furniture", image: "/icons/chair.png" },
+  { name: "Fashion", image: "/icons/tshirt.png" },
+  { name: "Others", image: "/icons/box.png" },
 ];
 
 export default function CategorySection() {
+
+  const router = useRouter();
+
+  const handleCategoryClick = (category: string) => {
+
+    const params = new URLSearchParams();
+    params.set("category", category);
+
+    router.push(`/search?${params.toString()}`);
+  };
+
   return (
     <div className="mt-12 ">
 
@@ -46,13 +45,13 @@ export default function CategorySection() {
         {categories.map((cat, i) => (
           <div
             key={i}
+            onClick={() => handleCategoryClick(cat.name)}
             className="bg-white/70 backdrop-blur-md 
             rounded-2xl p-6 text-center 
             shadow-sm hover:shadow-md 
             transition cursor-pointer border border-white/40"
           >
 
-            {/* Image */}
             <div className="flex justify-center mb-4">
               <img
                 src={cat.image}
@@ -61,7 +60,6 @@ export default function CategorySection() {
               />
             </div>
 
-            {/* Text */}
             <p className="text-gray-700 font-medium">
               {cat.name}
             </p>
