@@ -58,7 +58,7 @@ export default function DashboardPage() {
   const deleteListing = async (listingId: string) => {
     const confirmDelete = confirm("Delete this listing?");
 
-    if (!confirmDelete) return;
+    if (!confirmDelete) return; 
 
     try {
       await api.delete(`/listings/${listingId}`);
