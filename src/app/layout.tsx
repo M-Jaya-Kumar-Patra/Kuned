@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import Script from "next/script";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import NavbarWrapper from "@/components/NavbarWrapper";
+import Footer from "@/components/Footer";
 
 
 const geistSans = Geist({
@@ -39,11 +40,20 @@ export default function RootLayout({
         />
         
         <AuthProvider>
-          <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
-            <NavbarWrapper/>
-  {children}
-</GoogleOAuthProvider>
-        </AuthProvider>
+    <GoogleOAuthProvider clientId={process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!}>
+      
+      <div className="flex flex-col min-h-screen">
+        <NavbarWrapper />
+
+        <main className="flex-1">
+          {children}
+        </main>
+
+        <Footer />
+      </div>
+
+    </GoogleOAuthProvider>
+  </AuthProvider>
       </body>
     </html>
   );

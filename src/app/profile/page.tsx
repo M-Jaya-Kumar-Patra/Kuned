@@ -70,9 +70,10 @@ export default function ProfilePage() {
         }}
       >
         {/* Overlay */}
-        <div className="absolute inset-0 bg-white/40 backdrop-blur-[2px]"></div>
+        <div className="absolute inset-0  backdrop-blur-[1px]"></div>
 
-        <div className="relative z-10 flex items-center gap-4">
+        <div className="w-full max-w-6xl mx-auto px-4 flex items-center justify-between ">
+          <div className="relative z-10 flex items-center gap-4">
           {/* AVATAR */}
           <div className="relative group">
             <img
@@ -144,6 +145,7 @@ export default function ProfilePage() {
         >
           ✏️ Edit Profile
         </button>
+        </div>
       </div>
 
       <div className="max-w-6xl mx-auto mt-6 px-4 space-y-6">

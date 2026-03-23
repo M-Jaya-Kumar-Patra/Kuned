@@ -1,11 +1,9 @@
-"use client";
-
 import Link from "next/link";
 import { Facebook, Instagram, Twitter, Mail } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="mt-16 bg-white/60 backdrop-blur-xl border-t border-white/40">
+    <footer className="bg-white backdrop-blur-xl border-t border-white/40">
 
       <div className="max-w-6xl mx-auto px-6 py-10">
 

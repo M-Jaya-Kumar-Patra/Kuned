@@ -93,7 +93,6 @@ export default function HomePage() {
       <RecentlyViewed />
       </div>
 
-<Footer/>
     </div>
   </div>
 );
