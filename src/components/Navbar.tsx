@@ -42,7 +42,7 @@ export default function Navbar() {
       
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2">
-        <Image src="/images/logo_light.png" alt="Kuden" width={140} height={100}/>
+        <Image src="/images/logo_light.png" alt="Kuned" width={140} height={100}/>
       </Link>
 
       
