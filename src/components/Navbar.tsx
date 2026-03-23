@@ -37,12 +37,12 @@ export default function Navbar() {
   
 
   return (
-    <nav className="sticky top-0 z-50 backdrop-blur-md bg-white/95 border-b border-gray-200 px-6 py-2
+    <nav className="sticky top-0 z-50 h-16 backdrop-blur-md bg-white/95 border-b border-gray-200 px-6 py-2
      flex justify-between items-center shadow-sm">
       
       {/* Logo */}
       <Link href="/" className="flex items-center gap-2">
-        <Image src="/images/logo_light.png" alt="Kuned" width={140} height={100}/>
+        <Image src="/images/logo_light.png" alt="Kuned" width={140} height={46}/>
       </Link>
 
       
