@@ -41,7 +41,7 @@ export default function Navbar() {
      flex justify-between items-center shadow-sm">
       
       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2">
+      <Link href="/" className="flex items-center gap-2 shrink-0">
         <Image src="/images/logo_light.png" alt="Kuned" width={140} height={46}/>
       </Link>
 
@@ -112,7 +112,7 @@ export default function Navbar() {
             )}
           </div>
         ) : (
-          <div className="flex gap-3">
+          <div className="flex gap-3 items-center">
             <Link
               href="/login"
               className="text-gray-600 hover:text-blue-600"

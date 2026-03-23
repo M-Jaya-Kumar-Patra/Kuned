@@ -5,12 +5,19 @@ export const dynamic = "force-dynamic";
 
 export default function Page() {
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Search Listings</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff]">
+      
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        
+        <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+          Search Listings
+        </h1>
 
-      <Suspense fallback={<p>Loading...</p>}>
-        <SearchContent />
-      </Suspense>
+        <Suspense fallback={<p>Loading...</p>}>
+          <SearchContent />
+        </Suspense>
+
+      </div>
     </div>
   );
 }

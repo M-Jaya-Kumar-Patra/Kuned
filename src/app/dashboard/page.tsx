@@ -4,6 +4,9 @@ import { useEffect, useState, useContext } from "react";
 import api from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
+import { FaPlus } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
+
 
 type Listing = {
   _id: string;
@@ -13,6 +16,8 @@ type Listing = {
   topListing?: boolean;
   urgentSale?: boolean;
   isHighlighted?: boolean;
+  images: string[];
+  slug: string;
 };
 
 type UserStats = {
@@ -22,6 +27,7 @@ type UserStats = {
 
 export default function DashboardPage() {
   const auth = useContext(AuthContext);
+  const router = useRouter();
 
   const [listings, setListings] = useState<Listing[]>([]);
   const [stats, setStats] = useState<UserStats>({
@@ -156,128 +162,197 @@ const toggleSoldStatus = async (listing: Listing) => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">My Dashboard</h1>
+  <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-8 px-4 flex justify-center">
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="border p-4 rounded">
-          <p className="text-gray-500 text-sm">Listings</p>
-          <p className="text-xl font-bold">{listings.length}</p>
+    <div className="w-full max-w-5xl">
+
+      {/* Header */}
+      <h1 className="text-2xl font-semibold text-gray-800 mb-6">
+        My Dashboard
+      </h1>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-5 shadow">
+          <p className="text-sm text-gray-500">Listings</p>
+          <p className="text-2xl font-bold text-gray-800">
+            {listings.length}
+          </p>
         </div>
 
-        <div className="border p-4 rounded">
-          <p className="text-gray-500 text-sm">Bonus Coins</p>
-          <p className="text-xl font-bold">{stats.bonusCoins}</p>
+        <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-5 shadow">
+          <p className="text-sm text-gray-500">Bonus Coins</p>
+          <p className="text-2xl font-bold text-yellow-600">
+            🪙 {stats.bonusCoins}
+          </p>
         </div>
 
-        <div className="border p-4 rounded">
-          <p className="text-gray-500 text-sm">Paid Coins</p>
-          <p className="text-xl font-bold">{stats.paidCoins}</p>
+        <div className="bg-white/60 backdrop-blur-xl rounded-2xl p-5 shadow">
+          <p className="text-sm text-gray-500">Paid Coins</p>
+          <p className="text-2xl font-bold text-blue-600">
+            💰 {stats.paidCoins}
+          </p>
         </div>
       </div>
-      <h2 className="text-lg mb-4">My Listings</h2>
 
-      {listings.length === 0 && <p>No listings yet.</p>}
+      {/* Listings */}
+      <div className="flex justify-between items-center  mb-4">
+        <h2 className="text-lg font-semibold text-gray-700">
+        My Listings
+      </h2>
+      <button onClick={()=>router.push("/create")} className="cursor-pointer bg-blue-500 p-1 px-2 rounded-lg flex justify-center items-center gap-1">
+        <FaPlus />New Listing
+      </button>
+      </div>
 
-      {listings.map((listing) => (
-        <div key={listing._id} className="border p-4 mb-3 rounded hover:shadow">
-          <div className="flex justify-between">
-            <div>
-              <h3 className="font-semibold text-lg">{listing.title}</h3>
-
-              <p className="text-green-600 font-medium">₹{listing.price}</p>
-            </div>
-
-          <div className="flex gap-3 items-center">
-
-  <Link href={`/edit/${listing._id}`} className="text-blue-600">
-    Edit
-  </Link>
-
-  <button
-    onClick={() => deleteListing(listing._id)}
-    className="text-red-600"
-  >
-    Delete
-  </button>
-
-  <button
-  onClick={() => toggleSoldStatus(listing)}
-  className={
-    listing.status === "sold"
-      ? "text-gray-500"
-      : "text-green-600"
-  }
->
-{listing.status === "sold" ? "↩ Mark Active" : "✔ Mark Sold"}
-</button>
-
-  {listing.topListing ? (
-    <span className="text-yellow-600 font-semibold">
-      ⭐ Top Listing
-    </span>
-  ) : (
-    <button
-      onClick={() => makeTopListing(listing._id)}
-      className="text-yellow-600"
-    >
-      ⭐ Top (5 coins)
-    </button>
-  )}
-
-  {listing.urgentSale ? (
-    <span className="text-orange-600 font-semibold">
-      🚨 Urgent
-    </span>
-  ) : (
-    <button
-      onClick={() => makeUrgentSale(listing._id)}
-      className="text-orange-600"
-    >
-      🚨 Urgent (2 coins)
-    </button>
-  )}
-
-  {listing.isHighlighted ? (
-    <span className="text-blue-600 font-semibold">
-      🔥 Highlighted
-    </span>
-  ) : (
-    <button
-      onClick={() => makeHighlightListing(listing._id)}
-      className="text-blue-600"
-    >
-      🔥 Highlight (3 coins)
-    </button>
-  )}
-
-</div>
-          </div>
+      {listings.length === 0 && (
+        <div className="text-center py-16 text-gray-400">
+          No listings yet 🙂
         </div>
-      ))}
-      <div className="flex gap-3 mt-6">
+      )}
 
-  <button
-    disabled={page === 1}
-    onClick={() => setPage(page - 1)}
-    className="border px-3 py-1"
-  >
-    Previous
-  </button>
+      <div className="space-y-4">
 
-  <span>
-    Page {page} of {totalPages}
-  </span>
+        {listings.map((listing) => (
+          <div
+            key={listing._id}
 
-  <button
-    disabled={page === totalPages}
-    onClick={() => setPage(page + 1)}
-    className="border px-3 py-1"
-  >
-    Next
-  </button>
+            className="bg-white/70 backdrop-blur-xl rounded-2xl p-5 shadow hover:shadow-lg transition"
+          >
+
+            <div className="flex justify-between items-start gap-4">
+
+              {/* Left */}
+<div className="flex items-center gap-4">
+
+  {/* Image */}
+  <div className="w-16 h-16 rounded-xl overflow-hidden bg-gray-200 flex items-center justify-center">
+    <img
+    onClick={()=>router.push(`/item/${listing?.slug}`)}
+      src={listing.images[0] || "/default-product.png"}
+      alt={listing.title}
+      className="w-full h-full object-cover cursor-pointer"
+    />
+  </div>
+
+  {/* Info */}
+  <div>
+    <h3 className="font-semibold text-lg text-gray-800">
+      {listing.title}
+    </h3>
+
+    <p className="text-green-600 font-semibold mt-1">
+      ₹{listing.price}
+    </p>
+
+    <p className="text-xs mt-1 text-gray-400">
+      Status: {listing.status || "active"}
+    </p>
+  </div>
 
 </div>
+
+              {/* Right Buttons */}
+              <div className="flex flex-wrap gap-2 justify-end">
+
+                <Link
+                  href={`/edit/${listing._id}`}
+                  className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600 hover:bg-blue-200"
+                >
+                  Edit
+                </Link>
+
+                <button
+                  onClick={() => deleteListing(listing._id)}
+                  className="px-3 py-1 text-sm rounded-full bg-red-100 text-red-600 hover:bg-red-200"
+                >
+                  Delete
+                </button>
+
+                <button
+                  onClick={() => toggleSoldStatus(listing)}
+                  className={`px-3 py-1 text-sm rounded-full ${
+                    listing.status === "sold"
+                      ? "bg-gray-200 text-gray-600"
+                      : "bg-green-100 text-green-600"
+                  }`}
+                >
+                  {listing.status === "sold"
+                    ? "Mark Active"
+                    : "Mark Sold"}
+                </button>
+
+                {/* Features */}
+                {listing.topListing ? (
+                  <span className="px-3 py-1 text-sm rounded-full bg-yellow-100 text-yellow-700">
+                    ⭐ Top
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => makeTopListing(listing._id)}
+                    className="px-3 py-1 text-sm rounded-full bg-yellow-50 text-yellow-600 hover:bg-yellow-100"
+                  >
+                    ⭐ Top
+                  </button>
+                )}
+
+                {listing.urgentSale ? (
+                  <span className="px-3 py-1 text-sm rounded-full bg-orange-100 text-orange-600">
+                    🚨 Urgent
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => makeUrgentSale(listing._id)}
+                    className="px-3 py-1 text-sm rounded-full bg-orange-50 text-orange-600 hover:bg-orange-100"
+                  >
+                    🚨 Urgent
+                  </button>
+                )}
+
+                {listing.isHighlighted ? (
+                  <span className="px-3 py-1 text-sm rounded-full bg-blue-100 text-blue-600">
+                    🔥 Highlighted
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => makeHighlightListing(listing._id)}
+                    className="px-3 py-1 text-sm rounded-full bg-blue-50 text-blue-600 hover:bg-blue-100"
+                  >
+                    🔥 Highlight
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
+
+      </div>
+
+      {/* Pagination */}
+      <div className="flex justify-center items-center gap-4 mt-8">
+
+        <button
+          disabled={page === 1}
+          onClick={() => setPage(page - 1)}
+          className="px-4 py-2 rounded-full bg-white shadow disabled:opacity-40"
+        >
+          Previous
+        </button>
+
+        <span className="text-gray-600">
+          Page {page} of {totalPages}
+        </span>
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage(page + 1)}
+          className="px-4 py-2 rounded-full bg-white shadow disabled:opacity-40"
+        >
+          Next
+        </button>
+      </div>
+
     </div>
-  );
+  </div>
+);
 }

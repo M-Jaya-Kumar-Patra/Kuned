@@ -44,7 +44,7 @@ export default function RecentlyViewed() {
   if (!items.length) return null;
 
   return (
-    <div className="mt-12">
+    <div className="max-w-7xl mx-auto mt-12">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-5 px-1">

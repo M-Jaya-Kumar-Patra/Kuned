@@ -74,7 +74,13 @@ status: {
   type: String,
   enum: ["active", "sold"],
   default: "active"
-}
+},
+specifications: [
+  {
+    key: String,
+    value: String
+  }
+],
 
 },
 { timestamps: true }

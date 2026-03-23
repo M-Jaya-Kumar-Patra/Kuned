@@ -4,6 +4,15 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import api from "@/services/api";
 
+const reasons = [
+  { key: "spam", label: "Spam", icon: "🚫" },
+  { key: "scam", label: "Scam", icon: "⚠️" },
+  { key: "fake_item", label: "Fake Item", icon: "❌" },
+  { key: "inappropriate", label: "Inappropriate Content", icon: "🚷" },
+  { key: "harassment", label: "Harassment", icon: "❗" },
+  { key: "other", label: "Other", icon: "❓" },
+];
+
 export default function ReportContent() {
   const params = useSearchParams();
   const router = useRouter();
@@ -13,17 +22,11 @@ export default function ReportContent() {
   const [reason, setReason] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const submitReport = async () => {
-    if (!listingId) {
-      alert("Invalid listing");
-      return;
-    }
-
-    if (!reason) {
-      alert("Please select a reason");
-      return;
-    }
+    if (!listingId) return alert("Invalid listing");
+    if (!reason) return alert("Please select a reason");
 
     try {
       setLoading(true);
@@ -35,8 +38,7 @@ export default function ReportContent() {
         description,
       });
 
-      alert("Report submitted successfully");
-      router.push("/");
+      setSubmitted(true);
     } catch (err) {
       console.error(err);
       alert("Failed to submit report");
@@ -46,43 +48,93 @@ export default function ReportContent() {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Report Listing</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] flex items-center justify-center px-4">
 
-      <label className="block mb-2 font-medium">Reason</label>
+      {/* CARD */}
+      <div className="w-full max-w-md bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
 
-      <select
-        value={reason}
-        onChange={(e) => setReason(e.target.value)}
-        className="border w-full p-2 rounded"
-      >
-        <option value="">Select reason</option>
-        <option value="spam">Spam</option>
-        <option value="scam">Scam</option>
-        <option value="fake_item">Fake Item</option>
-        <option value="inappropriate">Inappropriate Content</option>
-        <option value="harassment">Harassment</option>
-        <option value="other">Other</option>
-      </select>
+        {!submitted ? (
+          <>
+            {/* HEADER */}
+            <div className="text-center mb-6">
+              <div className="text-5xl mb-2">🔔</div>
+              <h2 className="text-2xl font-semibold text-gray-800">
+                Report Listing
+              </h2>
+              <p className="text-gray-500 text-sm">
+                Help us keep the marketplace safe
+              </p>
+            </div>
 
-      <label className="block mt-4 mb-2 font-medium">
-        Description (optional)
-      </label>
+            {/* REASONS */}
+            <p className="text-sm font-medium text-gray-600 mb-3">
+              Reason that you report
+            </p>
 
-      <textarea
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        className="border w-full p-2 rounded"
-        rows={4}
-      />
+            <div className="grid grid-cols-2 gap-3 mb-5">
+              {reasons.map((r) => (
+                <button
+                  key={r.key}
+                  onClick={() => setReason(r.key)}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-sm transition text-gray-700 ${
+                    reason === r.key
+                      ? "border-indigo-500 bg-indigo-50 text-indigo-600"
+                      : "border-gray-200 bg-white hover:bg-gray-50"
+                  }`}
+                >
+                  <span>{r.icon}</span>
+                  {r.label}
+                </button>
+              ))}
+            </div>
 
-      <button
-        onClick={submitReport}
-        disabled={loading}
-        className="bg-red-500 text-white px-6 py-2 mt-4 rounded"
-      >
-        {loading ? "Submitting..." : "Submit Report"}
-      </button>
+            {/* DESCRIPTION */}
+            <p className="text-sm font-medium text-gray-600 mb-2">
+              Additional details (optional)
+            </p>
+
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Provide more details if needed..."
+              className="w-full p-3 rounded-xl border placeholder:text-gray-400 text-gray-900 border-gray-200 focus:outline-none mb-5"
+              rows={3}
+            />
+
+            {/* BUTTON */}
+            <button
+              onClick={submitReport}
+              disabled={loading}
+              className="w-full py-2 rounded-xl bg-gradient-to-r from-pink-500 to-red-500 text-white font-medium hover:opacity-90 transition"
+            >
+              {loading ? "Submitting..." : "Submit Report"}
+            </button>
+          </>
+        ) : (
+          <>
+            {/* SUCCESS STATE */}
+            <div className="text-center">
+              <div className="text-5xl mb-3">✅</div>
+
+              <h2 className="text-xl font-semibold text-gray-800">
+                Report submitted successfully
+              </h2>
+
+              <p className="text-gray-500 text-sm mt-2">
+                Our team will review this shortly
+              </p>
+
+              <button
+                onClick={() => router.push("/")}
+                className="mt-6 px-6 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white"
+              >
+                Go Back to Home
+              </button>
+            </div>
+          </>
+        )}
+
+      </div>
     </div>
   );
 }

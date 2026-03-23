@@ -2,12 +2,14 @@
 
 import { ArrowRight } from "lucide-react";
 import type { Listing } from "@/types/listing";
+import { useRouter } from "next/navigation";
 
 type Props = {
   listings: Listing[];
 };
 
 export default function FeaturedListings({ listings }: Props) {
+  const router = useRouter();
 
   const featured = listings.slice(0, 10);
 
@@ -21,7 +23,10 @@ export default function FeaturedListings({ listings }: Props) {
           Featured Listings
         </h2>
 
-        <button className="flex items-center gap-1 text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
+        <button 
+        onClick={()=>router.push("/search?keyword=&location=")}
+        
+        className="flex items-center gap-1 cursor-pointer text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
           View All
           <ArrowRight className="w-4 h-4" />
         </button>

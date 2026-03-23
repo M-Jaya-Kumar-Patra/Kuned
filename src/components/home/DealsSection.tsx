@@ -5,7 +5,7 @@ import type { Listing } from "@/types/listing";
 import Link from "next/link";
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
-
+import { useRouter } from "next/navigation";
 
 type Props = {
   listings: Listing[];
@@ -13,6 +13,7 @@ type Props = {
 
 export default function DealsSection({ listings }: Props) {
   const auth = useContext(AuthContext);
+  const router = useRouter();
 const user = auth?.user;
 
 const coins = (user?.bonusCoins ?? 0) + (user?.paidCoins ?? 0);
@@ -57,7 +58,10 @@ const isLatestTwoRows = latest.length > 3;
             Urgent Deals
           </h2>
 
-          <button className="flex items-center gap-1 text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
+          <button 
+        onClick={()=>router.push("/search?keyword=&location=")}
+          
+          className="flex items-center gap-1 cursor-pointer text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
             View All
             <ArrowRight className="w-4 h-4" />
           </button>
@@ -106,7 +110,9 @@ const isLatestTwoRows = latest.length > 3;
             Latest Listings
           </h2>
 
-          <button className="flex items-center gap-1 text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
+          <button
+        onClick={()=>router.push("/search?keyword=&location=")}
+           className="flex items-center gap-1 cursor-pointer text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
             View All
             <ArrowRight className="w-4 h-4" />
           </button>
@@ -160,6 +166,8 @@ const isLatestTwoRows = latest.length > 3;
 
         {/* Coins Box */}
      <div
+        onClick={()=>router.push("/create")}
+     
   className="
     mt-6
     bg-white/70 backdrop-blur-md
@@ -168,6 +176,7 @@ const isLatestTwoRows = latest.length > 3;
     p-4
     flex items-center gap-4
     shadow-sm
+    cursor-pointer
   "
 >
   {/* Icon */}

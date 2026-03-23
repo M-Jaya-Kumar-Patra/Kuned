@@ -13,6 +13,7 @@ export async function POST(req: Request) {
 
   const user = await User.findOne({ email });
 
+
   if (!user) {
     return NextResponse.json(
       { message: "User not found" },

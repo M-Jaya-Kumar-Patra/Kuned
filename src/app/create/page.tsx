@@ -16,6 +16,10 @@ export default function CreateListingPage() {
     location: "",
   });
 
+  const [specs, setSpecs] = useState([
+  { key: "", value: "" }
+]);
+
   const [uploading, setUploading] = useState(false);
 
   const handleChange = (
@@ -37,6 +41,7 @@ export default function CreateListingPage() {
         ...form,
         price: Number(form.price),
         images,
+        specifications: specs.filter(s => s.key && s.value),
       });
 
       router.push("/dashboard");
@@ -96,6 +101,22 @@ export default function CreateListingPage() {
   const removeImage = (index: number) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
+
+  const handleSpecChange = (index: number, field: "key" | "value", val: string) => {
+  const updated = [...specs];
+  updated[index][field] = val;
+  setSpecs(updated);
+};
+
+const addSpec = () => {
+  setSpecs([...specs, { key: "", value: "" }]);
+};
+
+const removeSpec = (index: number) => {
+  setSpecs(specs.filter((_, i) => i !== index));
+};
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f5f7ff] to-[#eef1ff]">
@@ -180,6 +201,49 @@ export default function CreateListingPage() {
                     <option>Hostel Items</option>
                   </select>
                 </div>
+
+                <div>
+  <h3 className="text-sm text-gray-600 mb-3">Specifications</h3>
+
+  {specs.map((spec, index) => (
+    <div key={index} className="flex gap-2 mb-2">
+      
+      <input
+        placeholder="Field (e.g. Material)"
+        value={spec.key}
+        onChange={(e) =>
+          handleSpecChange(index, "key", e.target.value)
+        }
+        className="flex-1 p-2 rounded-lg border placeholder:text-gray-400 text-gray-900"
+      />
+
+      <input
+        placeholder="Value (e.g. Steel)"
+        value={spec.value}
+        onChange={(e) =>
+          handleSpecChange(index, "value", e.target.value)
+        }
+        className="flex-1 p-2 rounded-lg border placeholder:text-gray-400 text-gray-900"
+      />
+
+      <button
+        type="button"
+        onClick={() => removeSpec(index)}
+        className="bg-red-600 px-2 rounded-md text-white"
+      >
+        ✕
+      </button>
+    </div>
+  ))}
+
+  <button
+    type="button"
+    onClick={addSpec}
+    className="text-blue-500 text-sm mt-2"
+  >
+    + Add More
+  </button>
+</div>
 
                 {/* Location */}
                 <div>

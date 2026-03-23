@@ -3,6 +3,7 @@
 import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import ChatButton from "@/components/ChatButton";
+import Link from "next/link";
 
 type Props = {
   listingId: string;
@@ -12,34 +13,40 @@ type Props = {
 export default function ListingActions({ listingId, sellerId }: Props) {
 
   const auth = useContext(AuthContext);
- 
+
   if (!auth) return null;
 
   const { user } = auth;
 
+  const isSeller = user?._id === sellerId;
+
   // If seller is viewing their own listing
-  if (user?._id === sellerId) {
+  if (isSeller) {
     return (
-      <p className="text-gray-500 text-sm">
-        This is your listing
-      </p>
+      <div className="mt-6">
+        <p className="text-gray-500 text-sm bg-gray-100 px-4 py-2 rounded-lg inline-block">
+          This is your listing
+        </p>
+      </div>
     );
   }
 
   return (
-    <div className="mt-6 flex gap-4">
+    <div className="mt-6 flex gap-4 flex-wrap items-center">
 
+      {/* CHAT BUTTON */}
       <ChatButton
         listingId={listingId}
         sellerId={sellerId}
       />
 
-      <a
+      {/* REPORT BUTTON */}
+      <Link
         href={`/report?listing=${listingId}`}
-        className="border px-6 py-2 rounded"
+        className=" h-[42px]  px-6 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
       >
-        Report Listing
-      </a>
+        Report
+      </Link>
 
     </div>
   );

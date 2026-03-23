@@ -7,11 +7,26 @@ import { requireAuth } from "@/lib/requireAuth";
 import { spendCoins } from "@/utils/coinService";
 import { COIN_COST } from "@/constants/coins";
 
+
+type Specification = {
+  key: string;
+  value: string;
+};
+type CreateListingBody = {
+  title: string;
+  description: string;
+  price: number;
+  category: string;
+  location: string;
+  images: string[];
+  specifications?: Specification[];
+};
+
 export async function POST(req: Request) {
 
   try {
 
-    const auth = requireAuth(req); if (auth instanceof Response) return auth;
+    const auth = requireAuth(req); 
     if (auth instanceof Response) return auth;
 
     const user = auth as { id: string };
@@ -28,28 +43,37 @@ export async function POST(req: Request) {
       );
     }
 
-    const body = await req.json();
+    const body: CreateListingBody = await req.json();
 
-    const {
-      title,
-      description,
-      price,
-      category,
-      location,
-      images
-    } = body;
+const {
+  title,
+  description,
+  price,
+  category,
+  location,
+  images,
+  specifications
+} = body;
 
-    if (!title || !description || !price || !category || !location) {
+    if (!title || !description || price == null || !category || !location) {
       return NextResponse.json(
         { message: "Missing required fields" },
         { status: 400 }
       );
     }
 
+    
+
+
     const slug = generateSlug(title, location);
 
     // spend coins BEFORE creating listing
     await spendCoins(user.id, COIN_COST.POST_LISTING, "post_listing");
+
+
+    const cleanSpecs = (specifications || []).filter(
+  (s: Specification) => s.key?.trim() && s.value?.trim()
+);
 
     const listing = await Listing.create({
       title,
@@ -59,7 +83,8 @@ export async function POST(req: Request) {
       location,
       images,
       sellerId: user.id,
-      slug
+      slug,
+      specifications: cleanSpecs
     });
 
     return NextResponse.json({

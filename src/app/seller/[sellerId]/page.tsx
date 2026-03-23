@@ -49,80 +49,152 @@ export default function SellerPage({
   if (!seller) return <p className="p-10 text-center">Loading seller...</p>;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-10">
+  <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] px-4 py-8">
 
-      {/* Seller Header */}
-      <div className="bg-white rounded-xl shadow-sm border p-6 flex items-center gap-6 mb-10">
+    <div className="max-w-6xl mx-auto">
 
-  <img
-    src={seller.avatar || "/images/avatar.png"}
-    className="w-20 h-20 rounded-full object-cover border"
-  />
+      {/* PROFILE HEADER */}
+      <div className="relative bg-white/70 backdrop-blur-xl rounded-3xl shadow overflow-hidden mb-10">
 
-  <div className="flex-1">
+        {/* Cover */}
+        <div className="h-40 bg-gradient-to-r from-indigo-400 to-blue-400 opacity-70" />
 
-    <h1 className="text-2xl font-semibold">
-      {seller.name}
-    </h1>
+        {/* Avatar */}
+        <div className="absolute top-24 left-1/2 transform -translate-x-1/2">
+          <img
+            src={seller.avatar || "/images/avatar.png"}
+            className="w-24 h-24 rounded-full border-4 border-white object-cover shadow"
+          />
+        </div>
 
-<p className="text-yellow-500 font-medium">
-⭐ {seller.trustScore} Trust Score
-</p>
-    <p className="text-gray-500 text-sm mt-1">
-      Member since {new Date(seller.createdAt).toDateString()}
-    </p>
+        {/* Info */}
+        <div className="pt-16 pb-6 text-center">
 
-  </div>
+          <h1 className="text-2xl font-semibold text-gray-800">
+            {seller.name}
+          </h1>
 
-  {/* Chat Button */}
-  <Link
-    href={`/chat?seller=${seller._id}`}
-    className="bg-black text-white px-5 py-2 rounded-lg hover:bg-gray-800 transition"
-  >
-    Chat Seller
-  </Link>
+          <p className="text-yellow-500 mt-1 font-medium">
+            ⭐ {seller.trustScore} Trust Score
+          </p>
 
-</div>
+          <p className="text-gray-500 text-sm mt-1">
+            Joined in {new Date(seller.createdAt).toLocaleDateString()}
+          </p>
 
-      {/* Listings Title */}
-      <h2 className="text-xl font-semibold mb-6">
-        Listings by {seller.name}
-      </h2>
+          {/* ACTIONS */}
+          <div className="flex justify-center gap-3 mt-4">
 
-      {/* Listings Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <Link
+              href={`/chat?seller=${seller._id}`}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-blue-500 text-white"
+            >
+              💬 Chat with Seller
+            </Link>
+
+            <button
+              onClick={() => window.location.href = `/report?listing=${seller._id}`}
+              className="text-sm text-gray-500 underline"
+            >
+              Report Seller
+            </button>
+
+          </div>
+
+        </div>
+
+        {/* STATS */}
+        <div className="grid grid-cols-3 border-t text-center">
+
+          <div className="p-4">
+            <p className="font-semibold text-gray-800">
+              {listings.length}
+            </p>
+            <p className="text-xs text-gray-500">
+              Listings
+            </p>
+          </div>
+
+          <div className="p-4 border-x">
+            <p className="font-semibold text-gray-800">
+              {seller.trustScore}
+            </p>
+            <p className="text-xs text-gray-500">
+              Trust Score
+            </p>
+          </div>
+
+          <div className="p-4">
+            <p className="font-semibold text-gray-800">
+              {new Date(seller.createdAt).getFullYear()}
+            </p>
+            <p className="text-xs text-gray-500">
+              Member Since
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+      {/* LISTINGS HEADER */}
+      <div className="flex justify-between items-center mb-6">
+
+        <h2 className="text-xl font-semibold text-gray-800">
+          Listings by {seller.name}
+        </h2>
+
+        <select className="px-3 py-2 rounded-lg border border-gray-200 bg-white text-sm">
+          <option>Latest</option>
+          <option>Price low-high</option>
+          <option>Price high-low</option>
+        </select>
+
+      </div>
+
+      {/* GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
 
         {listings.map((item) => (
-
           <Link
             key={item._id}
             href={`/item/${item.slug}`}
-            className="bg-white rounded-xl border hover:shadow-lg transition overflow-hidden"
+            className="bg-white/70 backdrop-blur-xl rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition"
           >
 
-            <img
-              src={item.images[0]}
-              className="w-full h-40 object-cover"
-            />
+            {/* IMAGE */}
+            <div className="relative">
+              <img
+                src={item.images[0]}
+                className="w-full h-44 object-cover"
+              />
 
+              {/* Example badges */}
+              <span className="absolute top-2 left-2 text-xs bg-yellow-500 text-white px-2 py-1 rounded-full">
+                TOP LISTING
+              </span>
+
+            </div>
+
+            {/* CONTENT */}
             <div className="p-4">
 
-              <p className="text-sm font-medium line-clamp-2 mb-2">
+              <p className="font-medium text-gray-800 line-clamp-2 mb-2">
                 {item.title}
               </p>
 
-              <p className="text-green-600 font-semibold text-lg">
-                ₹{item.price}
+              <p className="text-green-600 font-bold text-lg">
+                ₹ {item.price}
               </p>
 
             </div>
 
           </Link>
-
         ))}
 
       </div>
 
     </div>
-  );
+  </div>
+);
 }

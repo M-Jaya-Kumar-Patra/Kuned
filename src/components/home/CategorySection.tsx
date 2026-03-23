@@ -33,7 +33,9 @@ export default function CategorySection() {
           Categories
         </h2>
 
-        <button className="flex items-center gap-1 text-indigo-500 text-sm font-medium hover:gap-2 transition-all">
+        <button 
+        onClick={()=>router.push("/search?keyword=&location=")}
+        className="flex items-center gap-1 text-indigo-500 text-sm font-medium hover:gap-2 transition-all cursor-pointer">
           View All
           <ArrowRight className="w-4 h-4" />
         </button>

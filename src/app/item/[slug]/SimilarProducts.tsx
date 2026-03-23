@@ -18,62 +18,54 @@ export default function SimilarProducts({ listingId }: { listingId: string }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-
     const fetchSimilar = async () => {
-
       try {
-
-
         const res = await api.get(`/listings/similar/${listingId}`);
-
         setSimilarListings(res.data);
-
       } catch (err) {
-
         console.error("Failed to fetch similar listings", err);
-
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
     fetchSimilar();
-
   }, [listingId]);
 
   if (loading) return null;
-
   if (similarListings.length === 0) return null;
 
   return (
+    <div className="max-w-7xl mx-auto px-6 py-10">
 
-    <div className="max-w-6xl mx-auto p-6">
-
-      <h2 className="text-2xl font-semibold mb-6">
+      {/* TITLE */}
+      <h2 className="text-2xl font-semibold text-gray-800 mb-6">
         Similar Products
       </h2>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
+      {/* GRID */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
 
         {similarListings.map((item) => (
 
           <Link
             key={item._id}
             href={`/item/${item.slug}`}
-            className="border rounded-lg overflow-hidden hover:shadow-lg transition"
+            className="group bg-white/70 backdrop-blur-xl rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition"
           >
 
-            <img
-              src={item.images?.[0]}
-              className="w-full h-40 object-cover"
-            />
+            {/* IMAGE */}
+            <div className="overflow-hidden">
+              <img
+                src={item.images?.[0]}
+                className="w-full h-40 object-cover group-hover:scale-105 transition duration-300"
+              />
+            </div>
 
+            {/* CONTENT */}
             <div className="p-3">
 
-              <p className="font-medium line-clamp-1">
+              <p className="font-medium text-gray-800 line-clamp-1 group-hover:text-indigo-600 transition">
                 {item.title}
               </p>
 
@@ -90,7 +82,5 @@ export default function SimilarProducts({ listingId }: { listingId: string }) {
       </div>
 
     </div>
-
   );
-
 }

@@ -56,64 +56,103 @@ export default function ForgotPasswordPage() {
   }, [showPopup]);
 
   return (
-    <div className="max-w-md mx-auto mt-20">
+  <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] flex items-center justify-center px-4 relative">
 
-      <h2 className="text-xl font-semibold mb-4">
-        Forgot Password
-      </h2>
+    {/* Card */}
+    <div className="w-full max-w-md bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.08)] text-center">
 
-      <input
-        type="email"
-        placeholder="Enter email"
-        className="border p-2 w-full mb-4"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+      {!showPopup ? (
+        <>
+          {/* 🔐 ICON */}
+          <div className="flex justify-center mb-4">
+            <img src="/images/forgot_password/lock.png" className="w-40" />
+          </div>
 
-      <button
-        onClick={handleSubmit}
-        className="bg-black text-white px-4 py-2 w-full"
-      >
-        Send Reset Link
-      </button>
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Forgot Password
+          </h2>
 
-      {/* Remember Password Button */}
-      <button
-        onClick={() => router.push("/login")}
-        className="mt-3 text-blue-600 text-sm hover:underline w-full"
-      >
-        Remembered your password? Login
-      </button>
-
-      {showPopup && (
-
-        <div className="mt-6 p-4 border rounded bg-gray-50">
-
-          <p className="mb-3">
-            Reset email sent to <strong>{email}</strong>
+          <p className="text-gray-500 mt-2 mb-6">
+            Enter your email and we’ll send you a reset link
           </p>
 
+          {/* Input */}
+          <div className="mb-4 text-left">
+            <label className="text-sm text-gray-600">
+              Email Address
+            </label>
+
+            <input
+              type="email"
+              placeholder="you@example.com"
+              className="w-full mt-1 px-4 py-2 rounded-lg border placeholder:text-gray-400 text-gray-900 border-gray-200 bg-white focus:outline-none"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          {/* Button */}
+          <button
+            onClick={handleSubmit}
+            className="w-full py-2 rounded-lg cursor-pointer bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-medium hover:opacity-90 transition"
+          >
+            Send Reset Link
+          </button>
+
+          {/* Bottom */}
+          <p className="text-sm text-gray-500 mt-4">
+            Remembered your password?{" "}
+            <span
+              onClick={() => router.push("/login")}
+              className="text-blue-600 cursor-pointer hover:underline"
+            >
+              Login
+            </span>
+          </p>
+        </>
+      ) : (
+        <>
+          {/* ✅ SUCCESS ICON */}
+          <div className="flex justify-center mb-4">
+            <img src="/images/forgot_password/success.png" className="w-40" />
+          </div>
+
+          <h2 className="text-2xl font-semibold text-gray-800">
+            Reset link sent!
+          </h2>
+
+          <p className="text-gray-500 mt-2 mb-4">
+            Check your email (<span className="font-medium">{email}</span>)
+          </p>
+
+          {/* Timer */}
           {timer > 0 ? (
-
-            <p className="text-sm text-gray-500">
-              Retry in {timer}s
+            <p className="text-gray-400 text-sm mb-4">
+              Resend in {timer}s
             </p>
-
           ) : (
-
             <button
               onClick={handleSubmit}
-              className="text-blue-600 underline text-sm"
+              className="w-full py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 transition mb-3"
             >
               Resend Email
             </button>
-
           )}
 
-        </div>
-
+          {/* Bottom */}
+          <p className="text-sm text-gray-500 mt-4">
+            Remembered your password?{" "}
+            <span
+              onClick={() => router.push("/login")}
+              className="text-blue-600 cursor-pointer hover:underline"
+            >
+              Login
+            </span>
+          </p>
+        </>
       )}
-
     </div>
-  );
+
+  </div>
+);
 }

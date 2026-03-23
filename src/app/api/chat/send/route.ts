@@ -36,6 +36,13 @@ export async function POST(req: Request) {
       text: text.trim(),
     });
 
+    await Conversation.findByIdAndUpdate(
+  conversationId,
+  {
+    $set: { updatedAt: new Date() }
+  }
+);
+
     const conversation = await Conversation.findById(conversationId);
 
     if (!conversation) {
@@ -63,6 +70,7 @@ export async function POST(req: Request) {
       message: text.slice(0, 50),
       type: "chat"
     });
+    
 
     return NextResponse.json({ message });
 

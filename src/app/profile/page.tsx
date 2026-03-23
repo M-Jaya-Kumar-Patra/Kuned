@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/services/api";
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
+import { useRouter } from "next/navigation";
 
 type User = {
   name: string;
@@ -18,6 +19,8 @@ type User = {
 type Stats = {
   listings: number;
   chats: number;
+  views: number;
+  messages: number;
 };
 
 type Listing = {
@@ -26,19 +29,69 @@ type Listing = {
   price: number;
   images: string[];
   status?: "active" | "sold";
+  slug: string;
+  views?: number; // ✅ ADD THIS
+};
+
+type Conversation = {
+  unseenCount?: number;
 };
 
 export default function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [listings, setListings] = useState<any[]>([]);
+  const [listings, setListings] = useState<Listing[]>([]);
 
   const [editing, setEditing] = useState(false);
   const [name, setName] = useState(user?.name || "");
   const [copied, setCopied] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  
+  const [stats, setStats] = useState({
+  listings: 0,
+  chats: 0,
+  views: 0,
+  messages: 0,
+});
+
+
+  const router = useRouter();
+
+  useEffect(() => {
+  const fetchStats = async () => {
+    try {
+      // Listings (already have API)
+      const profileRes = await api.get("/profile");
+      const listings = profileRes.data.listings || [];
+
+      // Chats
+      const chatRes = await api.get("/chat/conversations");
+      const conversations = chatRes.data.conversations || [];
+
+      // 🔥 CALCULATIONS
+      const totalViews = listings.reduce(
+        (sum: number, l: Listing) => sum + (l.views || 0),
+        0
+      );
+
+      const totalMessages = conversations.reduce(
+        (sum: number, c: Conversation) => sum + (c.unseenCount || 0),
+        0
+      );
+
+      setStats({
+        listings: listings.length,
+        chats: conversations.length,
+        views: totalViews,
+        messages: totalMessages,
+      });
+
+    } catch (err) {
+      console.error("Stats fetch failed", err);
+    }
+  };
+
+  fetchStats();
+}, []);
 
   useEffect(() => {
     const loadData = async () => {
@@ -77,7 +130,7 @@ export default function ProfilePage() {
           {/* AVATAR */}
           <div className="relative group">
             <img
-              src={user.avatar || "/default-avatar.png"}
+              src={user?.avatar || "/images/default-avatar.png"}
               className="w-36 h-36 rounded-full border-4 border-white shadow object-cover"
             />
 
@@ -244,28 +297,34 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
             {[
               {
-                name: "Buy Coins",
-                img: "/images/quickLinks/coins.png",
-              },
-              {
-                name: "Saved Listings",
-                img: "/images/quickLinks/heart.png",
-              },
-              {
-                name: "My Listings",
-                img: "/images/quickLinks/bar-chart.png",
-              },
-              {
-                name: "Payment History",
-                img: "/images/quickLinks/credit-card.png",
-              },
-              {
-                name: "Coin History",
-                img: "/images/quickLinks/refresh.png",
-              },
+      name: "Buy Coins",
+      img: "/images/quickLinks/coins.png",
+      path: "/buy-coins",
+    },
+    {
+      name: "Saved Listings",
+      img: "/images/quickLinks/heart.png",
+      path: "/saved",
+    },
+    {
+      name: "My Listings",
+      img: "/images/quickLinks/bar-chart.png",
+      path: "/dashboard",
+    },
+    {
+      name: "Payment History",
+      img: "/images/quickLinks/credit-card.png",
+      path: "/payments",
+    },
+    {
+      name: "Coin History",
+      img: "/images/quickLinks/refresh.png",
+      path: "/coins",
+    },
             ].map((item, i) => (
               <div
                 key={i}
+                onClick={() => router.push(item.path)}
                 className="
           bg-[#f7f8fc]
           rounded-xl
@@ -312,31 +371,27 @@ export default function ProfilePage() {
             {/* CARDS */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {[
-                {
-                  label: "Listings",
-                  value: stats.listings,
-                  img: "/images/activity/bar-chart.png",
-                  bg: "bg-orange-100",
-                },
-                {
-                  label: "Chats",
-                  value: stats.chats,
-                  img: "/images/activity/chat.png",
-                  bg: "bg-blue-100",
-                },
-                {
-                  label: "Views",
-                  value: 3240,
-                  img: "/images/activity/view.png",
-                  bg: "bg-indigo-100",
-                },
-                {
-                  label: "Messages",
-                  value: 128,
-                  img: "/images/activity/notification-bell.png",
-                  bg: "bg-orange-100",
-                },
-              ].map((item, i) => (
+  {
+    label: "Listings",
+    value: stats.listings,
+    img: "/images/activity/bar-chart.png",
+  },
+  {
+    label: "Chats",
+    value: stats.chats,
+    img: "/images/activity/chat.png",
+  },
+  {
+    label: "Views",
+    value: stats.views,
+    img: "/images/activity/view.png",
+  },
+  {
+    label: "Messages",
+    value: stats.messages,
+    img: "/images/activity/notification-bell.png",
+  },
+].map((item, i) => (
                 <div
                   key={i}
                   className="
@@ -385,10 +440,11 @@ export default function ProfilePage() {
           </div>
 
           {/* LIST */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 cursor-pointer">
             {listings.slice(0, 2).map((item) => (
               <div
                 key={item._id}
+                onClick={()=>router.push(`/item/${item?.slug}`)}
                 className="
           bg-white
           rounded-xl
