@@ -103,7 +103,7 @@ export default function RecentlyViewed() {
                   </p>
 
                   <p className="text-xs text-gray-500 mt-1">
-                    📍 {item.location || "Campus"}
+                    📍 {item.location || "Nearby"}
                   </p>
 
                 </div>

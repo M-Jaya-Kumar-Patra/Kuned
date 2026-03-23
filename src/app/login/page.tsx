@@ -61,11 +61,11 @@ export default function LoginPage() {
         />
 
         <h1 className="text-4xl font-semibold text-gray-800 leading-tight">
-          Buy & Sell <br /> within your campus
+          Buy & Sell <br /> Anything, Anytime
         </h1>
 
         <p className="text-gray-500 mt-3 text-lg">
-          Join the marketplace for students
+          Join a fast and secure marketplace
         </p>
 
         {/* Phone Image */}

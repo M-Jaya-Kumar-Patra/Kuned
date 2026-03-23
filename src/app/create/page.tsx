@@ -127,7 +127,7 @@ const removeSpec = (index: number) => {
           Create a New Listing
         </h1>
         <p className="text-gray-500 mt-1">
-          Sell your items quickly within your campus
+          Sell your items quickly, anywhere.
         </p>
 
         {/* Main Card */}

@@ -70,12 +70,12 @@ export default function SignupContent() {
         />
 
         <h1 className="text-4xl font-semibold text-gray-800 leading-tight">
-          Start your journey <br /> with Kuned
-        </h1>
+  Start your journey <br /> with Kuned
+</h1>
 
-        <p className="text-gray-500 mt-3 text-lg">
-          Buy, sell and connect within your campus
-        </p>
+<p className="text-gray-500 mt-3 text-lg">
+  Buy, sell, and connect—anytime, anywhere
+</p>
 
         {/* Phone Image */}
         <img

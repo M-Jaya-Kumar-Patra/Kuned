@@ -20,9 +20,9 @@ export default function Footer() {
             </div>
 
             <p className="text-sm text-gray-500">
-              Buy, sell & discover great deals near you.
-              A campus marketplace built for students.
-            </p>
+  Buy, sell & discover great deals near you.
+  A fast and reliable marketplace for everyone.
+</p>
           </div>
 
           {/* Quick Links */}
