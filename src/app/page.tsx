@@ -22,6 +22,7 @@ type Listing = {
   topListing?: boolean;
   urgentSale?: boolean;
   isHighlighted?: boolean;
+  status: "sold" | "active";
 };
 
 export default function HomePage() {
