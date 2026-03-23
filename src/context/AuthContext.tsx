@@ -94,7 +94,6 @@ export function AuthProvider({ children }: Props) {
   };
 
 
-  console.log("UUUUUUUUUUUUUUUUUUUU: ")
   return (
     <AuthContext.Provider value={{ user, login, logout, refreshUser }}>
       {children}
