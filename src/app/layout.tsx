@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import NavbarWrapper from "@/components/NavbarWrapper";
 import Footer from "@/components/Footer";
 import BetaNotice from "@/components/BetaNotice";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 
 const geistSans = Geist({
@@ -54,6 +55,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GoogleAnalytics gaId="G-7L1J4NMRP9" />
         
           <Script
           src="https://sdk.cashfree.com/js/v3/cashfree.js"
