@@ -40,6 +40,12 @@ export default function DashboardPage() {
   const user = auth?.user;
 
   useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
+  useEffect(() => {
     if (!user) return;
 
     const fetchListings = async () => {
