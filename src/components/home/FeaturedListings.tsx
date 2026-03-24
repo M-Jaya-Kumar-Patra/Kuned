@@ -14,7 +14,7 @@ export default function FeaturedListings({ listings }: Props) {
   const featured = listings.slice(0, 10);
 
   return (
-    <div className="mt-12">
+    <div className="mt-8">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6 px-1">
@@ -46,6 +46,7 @@ export default function FeaturedListings({ listings }: Props) {
 
           {featured.map((item) => (
             <div
+            onClick={()=>router.push(`/item/${item.slug}`)}
               key={item._id}
               className="
                 min-w-[180px] sm:min-w-[220px]

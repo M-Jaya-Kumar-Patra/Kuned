@@ -78,7 +78,7 @@ export default function HomePage() {
       {/* HERO */}
       <HeroSection />
 
-      <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-5 lg:px-6 pt-6 pb-10 space-y-10">
 
         {/* CATEGORIES */}
         <CategorySection />

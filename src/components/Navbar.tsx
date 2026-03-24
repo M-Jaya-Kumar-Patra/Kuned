@@ -37,25 +37,36 @@ export default function Navbar() {
   
 
   return (
-    <nav className="sticky top-0 z-50 h-16 backdrop-blur-md bg-white/95 border-b border-gray-200 px-6 py-2
+    <nav className="sticky top-0 z-50 h-16 backdrop-blur-md bg-white/95 border-b border-gray-200 px-3 sm:px-6 py-2
      flex justify-between items-center shadow-sm">
-      
-     <div className="flex justify-center items-center">
-       {/* Logo */}
-      <Link href="/" className="flex items-center gap-2 shrink-0">
-        <Image src="/images/logo_light.png" alt="Kuned" width={140} height={46}/>
-      </Link>
-      <span className="ml-2 text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full font-semibold">
-  BETA
-</span>
-     </div>
+    <div className="flex justify-center items-center shrink-0">
+  <Link href="/" className="relative inline-block group cursor-pointer">
+    {/* Logo */}
+    <Image
+      src="/images/logo_light.png"
+      alt="Kuned"
+      width={140}
+      height={46}
+    />
+
+    {/* BETA badge */}
+    <span className="absolute bottom-0.5 right-2 text-[6px] bg-indigo-600 text-white px-2  rounded-full font-semibold shadow">
+      BETA
+    </span>
+
+    {/* Tooltip */}
+  <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-2 py-1 text-[10px] sm:text-xs bg-black/70 text-white rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap pointer-events-none">
+    Home page
+  </span>
+  </Link>
+</div>
 
       
       {/* Right Section */}
       <div className="flex items-center gap-4 ">
         
         {user && (
-          <div className="flex justify-between items-center gap-6 mx-4">
+          <div className="hidden sm:flex  justify-between items-center gap-6 mx-4">
             <Link href="/chat" className="text-gray-600 hover:text-blue-600 transition font-semibold">
               Chat
             </Link>
@@ -67,7 +78,7 @@ export default function Navbar() {
         
         {/* Coins */}
         {user && (
-          <div className="flex items-center gap-2 bg-yellow-50 px-3 py-1.5 rounded-full text-sm font-semibold text-yellow-700 shadow-sm">
+          <div className="hidden sm:flex  items-center gap-2 bg-yellow-50 px-3 py-1.5 rounded-full text-sm font-semibold text-yellow-700 shadow-sm shrink-0">
             🪙 {(user?.bonusCoins ?? 0) + (user?.paidCoins ?? 0)}
           </div>
         )}
@@ -80,12 +91,12 @@ export default function Navbar() {
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setOpen(!open)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 "
             >
               <img
                 src={user?.avatar || "/images/default-avatar.png"}
                 alt="profile"
-                className="w-9 h-9 rounded-full object-cover border"
+                className="w-9 h-9 rounded-full object-cover border shrink-0"
               />
               <ChevronDown size={16} />
             </button>
@@ -93,6 +104,24 @@ export default function Navbar() {
             {/* Dropdown */}
             {open && (
               <div className="absolute right-0 mt-3 w-44 bg-white border rounded-xl shadow-lg py-2 text-sm">
+                {/* Mobile-only Links */}
+<div className="sm:hidden">
+  <Link
+    href="/chat"
+    onClick={() => setOpen(false)}
+    className="block px-4 py-2 hover:bg-gray-100 text-black"
+  >
+    Chat
+  </Link>
+  <Link
+    href="/create"
+    onClick={() => setOpen(false)}
+    className="block px-4 py-2 hover:bg-gray-100 text-black"
+  >
+    Sell
+  </Link>
+  <div className="border-t my-1"></div>
+</div>
                 <Link
                   href="/profile"
                   onClick={() => setOpen(false)}

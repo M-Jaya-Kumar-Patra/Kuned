@@ -26,6 +26,20 @@ export default function SearchContent() {
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
 
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
+
+  useEffect(() => {
+  if (showFilterModal) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "auto";
+  }
+
+  return () => {
+    document.body.style.overflow = "auto";
+  };
+}, [showFilterModal]);
   // ✅ FETCH LISTINGS
   useEffect(() => {
     const fetchListings = async () => {
@@ -53,10 +67,10 @@ export default function SearchContent() {
 
   return (
     <div className="w-full">
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-7xl mx-auto sm:px-6  sm:py-8">
 
         {/* 🔍 SEARCH BAR */}
-        <div className="bg-white/70 backdrop-blur-xl p-4 rounded-2xl shadow-sm flex gap-3 mb-8 border border-white/40">
+        <div className="bg-white/70 backdrop-blur-xl p-3 sm:p-4 mb-5 sm:mb-8 rounded-2xl shadow-sm flex flex-row gap-2 sm:gap-3  border border-white/40">
           <input
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
@@ -64,30 +78,48 @@ export default function SearchContent() {
             className="flex-1 px-4 py-3 rounded-xl bg-white border outline-none text-gray-800"
           />
 
-          <button className="bg-indigo-500 hover:bg-indigo-600 transition text-white px-6 rounded-xl">
+          <button className="bg-indigo-500 hover:bg-indigo-600 transition text-white px-2 sm:px-6 rounded-xl">
             Search
           </button>
         </div>
 
         {/* HEADER */}
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold text-gray-700">
-            Showing {listings.length} results
-          </h2>
+<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4 sm:mb-6">
 
-          <select className="px-4 py-2 rounded-xl bg-white border text-gray-600">
-            <option>Latest</option>
-            <option>Price Low to High</option>
-            <option>Price High to Low</option>
-          </select>
-        </div>
+  {/* LEFT: Results */}
+  <h2 className="ihdden sm:block text-base sm:text-lg font-semibold text-gray-700">
+    Showing <span className="text-gray-900">{listings.length}</span> results
+  </h2>
+
+  {/* RIGHT: Actions */}
+  <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+
+    {/* Sort */}
+    <select className="flex-1 sm:flex-none px-3 sm:px-4 py-2 rounded-lg sm:rounded-xl bg-white border text-gray-600 text-sm">
+      <option>Latest</option>
+      <option>Price Low to High</option>
+      <option>Price High to Low</option>
+    </select>
+
+    {/* Filter Button (mobile only) */}
+    <button
+      onClick={() => setShowFilterModal(true)}
+      className="lg:hidden px-3 sm:px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm whitespace-nowrap"
+    >
+      Filters ⚙️
+    </button>
+
+  </div>
+</div>
+
+     
 
         {/* MAIN GRID */}
-        <div className="grid grid-cols-12 gap-8">
+        <div className="flex flex-col lg:grid lg:grid-cols-12 gap-4 sm:gap-6">
 
           {/* 🧊 SIDEBAR */}
-          <div className="col-span-3">
-            <div className="bg-white/70 backdrop-blur-xl p-5 rounded-2xl shadow-sm border border-white/40 space-y-6">
+          <div className="hidden lg:block col-span-3">
+            <div className="bg-white/70 backdrop-blur-xl rounded-2xl shadow-sm border border-white/40 p-4 sm:p-5 space-y-5 sm:space-y-6">
 
               <h3 className="font-semibold text-gray-700">Filters</h3>
 
@@ -130,9 +162,11 @@ export default function SearchContent() {
                 {[
                   "Electronics",
                   "Furniture",
+                  "Fashion",
                   "Books",
-                  "Cycles",
-                  "Hostel Items",
+                  "Vehicles",
+                  "Home essentials",
+                  "Others",
                 ].map((cat) => (
                   <label key={cat} className="flex gap-2 text-sm text-gray-600">
                     <input
@@ -160,19 +194,19 @@ export default function SearchContent() {
           <div className="col-span-9">
 
             {listings.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
 
                 {listings.map((item) => (
                   <div
                     key={item._id}
-                    className="bg-white/80 backdrop-blur-xl rounded-2xl p-3 shadow-sm border border-white/40 hover:shadow-md hover:-translate-y-1 transition-all"
+                    className="bg-white/80 backdrop-blur-xl rounded-2xl p-3 sm:p-4 shadow-sm border border-white/40 hover:shadow-md hover:-translate-y-1 transition-all"
                   >
                     <img
                       src={item.images[0]}
                       className="w-full h-40 object-cover rounded-xl"
                     />
 
-                    <h3 className="mt-3 font-medium text-gray-800 text-sm">
+                    <h3 className="mt-2 sm:mt-3 font-medium text-gray-800 text-sm">
                       {item.title}
                     </h3>
 
@@ -188,7 +222,7 @@ export default function SearchContent() {
 
               </div>
             ) : (
-              <div className="bg-white/70 p-10 rounded-2xl text-center">
+              <div className="bg-white/70 p-6 sm:p-10 rounded-2xl text-center">
                 <p className="text-gray-600">No results found</p>
               </div>
             )}
@@ -196,6 +230,90 @@ export default function SearchContent() {
           </div>
         </div>
       </div>
+
+      {showFilterModal && (
+  <div className="fixed inset-0 z-50 bg-black/40 flex justify-center items-end lg:hidden">
+    
+    {/* Modal Box */}
+    <div className="bg-white w-full max-h-[85vh] rounded-t-2xl p-4 sm:p-5 overflow-y-auto">
+
+      <h3 className="font-semibold text-lg mb-4 text-gray-700">Filters</h3>
+
+      {/* Location */}
+      <div className="mb-4">
+        <p className="text-sm text-gray-600 mb-2">Location</p>
+        <input
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          placeholder="e.g. Pulaha HOR"
+          className="w-full px-3 py-2 border rounded-lg placeholder:text-gray-400 text-gray-900"
+        />
+      </div>
+
+      {/* Price */}
+      <div className="mb-4">
+        <p className="text-sm text-gray-600 mb-2">Price</p>
+        <div className="flex gap-2">
+          <input
+            value={minPrice}
+            onChange={(e) => setMinPrice(e.target.value)}
+            placeholder="Min"
+            className="w-full px-2 py-2 border rounded placeholder:text-gray-400 text-gray-900"
+          />
+          <input
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(e.target.value)}
+            placeholder="Max"
+            className="w-full px-2 py-2 border rounded placeholder:text-gray-400 text-gray-900"
+          />
+        </div>
+      </div>
+
+      {/* Category */}
+      <div className="mb-4">
+        <p className="text-sm text-gray-600 mb-2">Category</p>
+        {[
+          "Electronics",
+          "Furniture",
+          "Fashion",
+          "Books",
+          "Vehicles",
+          "Home essentials",
+          "Others",
+        ].map((cat) => (
+          <label key={cat} className="flex gap-2 text-sm mb-1 text-gray-600 ">
+            <input
+              type="radio"
+              checked={category === cat}
+              onChange={() => setCategory(cat)}
+            />
+            {cat}
+          </label>
+        ))}
+      </div>
+
+      {/* Buttons */}
+      <div className="flex gap-3 mt-4 sm:mt-6">
+        <button
+          onClick={() => {
+            clearFilters();
+          }}
+          className="flex-1 py-2 border rounded-lg text-red-500"
+        >
+          Clear
+        </button>
+
+        <button
+          onClick={() => setShowFilterModal(false)}
+          className="flex-1 py-2 bg-indigo-500 text-white rounded-lg"
+        >
+          Apply
+        </button>
+      </div>
+
+    </div>
+  </div>
+)}
     </div>
   );
 }

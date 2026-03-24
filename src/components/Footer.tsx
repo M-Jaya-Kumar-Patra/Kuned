@@ -43,12 +43,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/post" className="hover:text-indigo-500 transition">
+                <Link href="/dashboard" className="hover:text-indigo-500 transition">
                   Post Listing
                 </Link>
               </li>
               <li>
-                <Link href="/account" className="hover:text-indigo-500 transition">
+                <Link href="/profile" className="hover:text-indigo-500 transition">
                   My Account
                 </Link>
               </li>

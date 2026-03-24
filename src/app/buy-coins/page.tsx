@@ -69,16 +69,16 @@ export default function BuyCoinsPage() {
   };
 
   return (
-  <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#f5f7ff] py-10 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#f5f7ff] py-6 sm:py-10 px-3 sm:px-4">
 
     <div className="max-w-6xl mx-auto">
 
       {/* Header */}
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-semibold text-gray-800">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">
           Buy Coins
         </h1>
-        <p className="text-gray-600 mt-3 text-lg">
+        <p className="text-gray-600 mt-2 sm:mt-3 text-sm sm:text-base md:text-lg">
           Boost your listings and sell faster 🚀
         </p>
         <p className="text-gray-400 mt-1">
@@ -87,9 +87,8 @@ export default function BuyCoinsPage() {
       </div>
 
       {/* Cards Container */}
-      <div className="bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-lg">
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg">
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
 
           {packages.map((pkg) => {
             const isPopular = pkg.id === "popular";
@@ -97,9 +96,9 @@ export default function BuyCoinsPage() {
             return (
               <div
                 key={pkg.id}
-                className={`relative rounded-2xl p-6 text-center transition shadow-sm ${
+                className={`relative rounded-2xl p-4 sm:p-6 text-center transition shadow-sm ${
                   isPopular
-                    ? "bg-white border-2 border-indigo-400 scale-105 shadow-lg"
+                    ? "bg-white border-2 border-indigo-400 sm:scale-105 shadow-lg"
                     : "bg-white/80"
                 }`}
               >
@@ -116,12 +115,12 @@ export default function BuyCoinsPage() {
                   <img
                     src="/images/quickLinks/coins.png"
                     alt="coins"
-                    className="w-16 h-16 object-contain"
+                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
                   />
                 </div>
 
                 {/* Coins */}
-                <h2 className="text-2xl font-semibold text-gray-800">
+                <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
                   {pkg.coins} Coins
                 </h2>
 
@@ -129,7 +128,7 @@ export default function BuyCoinsPage() {
                 <div className="w-full h-[1px] bg-gray-200 my-3"></div>
 
                 {/* Price */}
-                <p className="text-3xl font-bold text-gray-800">
+                <p className="text-2xl sm:text-3xl font-bold text-gray-800">
                   ₹{pkg.price}
                 </p>
 
@@ -176,8 +175,7 @@ export default function BuyCoinsPage() {
     height={24}
   />
 </p>
-
-          <div className="flex justify-center gap-8 mt-4 text-sm text-gray-500">
+<div className="flex flex-wrap justify-center gap-4 sm:gap-8 mt-4 text-xs sm:text-sm text-gray-600">
             <span>🔒 Secure</span>
             <span>⚡ Instant credit</span>
             <span>💳 Multiple payment options</span>
@@ -188,7 +186,7 @@ export default function BuyCoinsPage() {
       </div>
 
       {/* Usage Section */}
-      <div className="mt-8 bg-white/70 backdrop-blur-xl rounded-2xl p-6 shadow">
+      <div className="mt-6 sm:mt-8 bg-white/70 backdrop-blur-xl rounded-2xl p-4 sm:p-6 shadow">
 
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
           Usage

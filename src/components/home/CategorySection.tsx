@@ -8,6 +8,7 @@ const categories = [
   { name: "Electronics", image: "/icons/laptop.png" },
   { name: "Furniture", image: "/icons/chair.png" },
   { name: "Fashion", image: "/icons/tshirt.png" },
+  { name: "Vehicles", image: "/icons/car.png" },
   { name: "Others", image: "/icons/box.png" },
 ];
 
@@ -24,7 +25,7 @@ export default function CategorySection() {
   };
 
   return (
-    <div className="mt-12 ">
+    <div className="">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
@@ -42,7 +43,7 @@ export default function CategorySection() {
       </div>
 
       {/* Category Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 sm:gap-6">
 
         {categories.map((cat, i) => (
           <div

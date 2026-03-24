@@ -126,12 +126,12 @@ const removeSpec = (index: number) => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#f5f7ff] to-[#eef1ff]">
       {/* Top spacing */}
-      <div className="max-w-6xl mx-auto px-6 py-10">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
         {/* Title */}
-        <h1 className="text-3xl font-semibold text-gray-800">
+        <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
           Create a New Listing
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-gray-500 mt-1 text-sm sm:text-base">
           Sell your items quickly, anywhere.
         </p>
 
@@ -141,14 +141,14 @@ const removeSpec = (index: number) => {
         mt-8
         bg-white/70 backdrop-blur-xl
         border border-white/40
-        rounded-3xl
+        rounded-2xl sm:rounded-3xl
         shadow-sm
         overflow-hidden
       "
         >
           <form onSubmit={handleSubmit}>
             {/* BASIC INFO */}
-            <div className="p-6 border-b">
+            <div className="p-4 sm:p-4 sm:p-6 border-b">
               <h2 className="font-semibold text-gray-700 mb-4">
                 Basic Info <span className="text-red-500">*</span>
               </h2>
@@ -156,7 +156,7 @@ const removeSpec = (index: number) => {
               <input
                 name="title"
                 placeholder="e.g. Study Table in Good Condition"
-                className="w-full p-3 rounded-xl border bg-white/60 outline-none mb-4 text-gray-800
+                className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none mb-4 text-gray-800
   placeholder:text-gray-400"
                 onChange={handleChange}
               />
@@ -164,16 +164,16 @@ const removeSpec = (index: number) => {
               <textarea
                 name="description"
                 placeholder="Describe your item..."
-                className="w-full p-3 rounded-xl border bg-white/60 outline-none h-28 text-gray-800
+                className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none h-28 text-gray-800
   placeholder:text-gray-400"
                 onChange={handleChange}
               />
             </div>
 
             {/* GRID SECTION */}
-            <div className="grid md:grid-cols-2">
+            <div className="grid grid-cols-1 md:grid-cols-2">
               {/* LEFT SIDE */}
-              <div className="p-6 space-y-6 border-r">
+              <div className="p-4 sm:p-6 space-y-6 md:border-r">
                 {/* Price */}
                 <div>
                   <h3 className="text-sm text-gray-600 mb-2">Price</h3>
@@ -182,7 +182,7 @@ const removeSpec = (index: number) => {
                     name="price"
                     type="number"
                     placeholder="₹ Price"
-                    className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800
+                    className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none text-gray-800
   placeholder:text-gray-400"
                     onChange={handleChange}
                   />
@@ -194,16 +194,18 @@ const removeSpec = (index: number) => {
 
                   <select
                     name="category"
-                    className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800
+                    className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none text-gray-800
   "
                     onChange={handleChange}
                   >
                     <option value="">Select Category</option>
                     <option>Electronics</option>
                     <option>Furniture</option>
+                    <option>Fashion</option>
                     <option>Books</option>
-                    <option>Cycles</option>
-                    <option>Hostel Items</option>
+                    <option>Vehicles</option>
+                    <option>Home Essentials</option>
+                    <option>Others</option>
                   </select>
                 </div>
 
@@ -213,7 +215,7 @@ const removeSpec = (index: number) => {
   <select
     name="condition"
     required
-    className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800"
+    className="w-fullp-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none text-gray-800"
     onChange={handleChange}
   >
     <option value="">Select Condition</option>
@@ -227,7 +229,7 @@ const removeSpec = (index: number) => {
   <h3 className="text-sm text-gray-600 mb-3">Specifications</h3>
 
   {specs.map((spec, index) => (
-    <div key={index} className="flex gap-2 mb-2">
+    <div key={index} className="flex flex-col sm:flex-row gap-2 mb-2">
       
       <input
         placeholder="Field (e.g. Material)"
@@ -237,7 +239,8 @@ const removeSpec = (index: number) => {
         }
         className="flex-1 p-2 rounded-lg border placeholder:text-gray-400 text-gray-900"
       />
-
+<div className="flex justify-center items-center gap-2">
+  
       <input
         placeholder="Value (e.g. Steel)"
         value={spec.value}
@@ -250,10 +253,11 @@ const removeSpec = (index: number) => {
       <button
         type="button"
         onClick={() => removeSpec(index)}
-        className="bg-red-600 px-2 rounded-md text-white"
+        className="bg-red-600 h-full w-h px-2 rounded-md text-white font-bold"
       >
         ✕
       </button>
+</div>
     </div>
   ))}
 
@@ -272,8 +276,8 @@ const removeSpec = (index: number) => {
 
                   <input
                     name="location"
-                    placeholder="e.g. Pulaha HOR, VSSUT"
-                    className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800
+                    placeholder="e.g.  HOR, VSSUT"
+                    className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none text-gray-800
   placeholder:text-gray-400"
                     onChange={handleChange}
                   />
@@ -281,7 +285,7 @@ const removeSpec = (index: number) => {
               </div>
 
               {/* RIGHT SIDE (UPLOAD) */}
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <h3 className="text-gray-700 font-semibold mb-3">
                   Image Upload
                 </h3>
@@ -291,7 +295,7 @@ const removeSpec = (index: number) => {
                   className="
                 flex flex-col items-center justify-center
                 border-2 border-dashed rounded-2xl
-                h-40 cursor-pointer
+                h-32 sm:h-40 cursor-pointer
                 text-gray-500 hover:bg-gray-50 transition
               "
                 >
@@ -320,7 +324,7 @@ const removeSpec = (index: number) => {
                     <div key={index} className="relative">
                       <img
                         src={img}
-                        className="w-24 h-24 object-cover rounded-xl border"
+                        className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl border"
                       />
 
                       <button
@@ -337,12 +341,12 @@ const removeSpec = (index: number) => {
             </div>
 
             {/* SUBMIT */}
-            <div className="p-6 border-t">
+            <div className="p-4 sm:p-6 border-t">
               <button
                 disabled={uploading}
                 className="
                 w-full
-                py-3
+                py-2.5 sm:py-3 text-sm sm:text-base
                 rounded-xl
                 text-white
                 font-medium

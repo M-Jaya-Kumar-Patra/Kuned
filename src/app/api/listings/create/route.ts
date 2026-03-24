@@ -58,7 +58,6 @@ const {
 } = body;
 
 
-console.log("tttttttttttttttt: ", condition)
 
     if (!title || !description || price == null || !category || !condition || !location) {
        return NextResponse.json(

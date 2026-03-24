@@ -286,12 +286,13 @@ useEffect(() => {
   );
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gray-50 ">
       {/* HEADER */}
-      <div className="bg-white shadow p-4 font-semibold text-lg">Chat</div>
-
+      <div className="bg-white shadow px-4 sm:px-6 py-3 flex items-center justify-between">
+  <h1 className="font-semibold text-black text-base sm:text-lg">Chat</h1>
+</div>
       {/* MESSAGE LIST */}
-      <div className="flex-1 overflow-y-auto p-6 space-y-2">
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 sm:py-4 space-y-2">
         {Object.entries(groupedMessages).map(([date, msgs]) => (
           <div key={date} className="relative">
             {/* Sticky date header */}
@@ -312,7 +313,7 @@ useEffect(() => {
                   } mb-2`}
                 >
                   <div
-                    className={`w-fit max-w-[70%] px-3 py-2 rounded-lg text-sm flex flex-col ${
+                    className={`w-fit max-w-[80%] sm:max-w-[70%] px-3 py-2 rounded-lg text-sm flex flex-col ${
                       isMine
                         ? "bg-black text-white rounded-br-none"
                         : "bg-gray-300 text-black rounded-bl-none"
@@ -348,18 +349,18 @@ useEffect(() => {
       </div>
 
       {/* INPUT */}
-      <div className="bg-white border-t p-4 flex gap-2">
+      <div className="bg-white border-t px-2 sm:px-4 py-2 sm:py-3 flex items-center gap-2">
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="flex-1 border rounded-lg px-3 py-2 outline-none text-black"
+          className="flex-1 border rounded-full px-3 sm:px-4 py-2 outline-none text-black text-sm"
           placeholder="Type a message..."
         />
 
         <button
           onClick={sendMessage}
-          className="bg-black text-white px-6 rounded-lg"
+          className="bg-black text-white px-4 sm:px-6 py-2 rounded-full text-sm"
         >
           Send
         </button>

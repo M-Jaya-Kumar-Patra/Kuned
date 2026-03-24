@@ -156,14 +156,12 @@ const formatTime = (dateString: string) => {
 };
 
   return (
-  <div className="min-h-screen flex justify-center items-start pt-6 bg-gradient-to-br from-purple-50 to-blue-50">
-
+  <div className="min-h-screen flex justify-center items-start pt-4 sm:pt-6 px-2 sm:px-4 bg-gradient-to-br from-purple-50 to-blue-50">
     {/* Main Chat Container */}
-    <div className="w-full max-w-2xl bg-white/60 backdrop-blur-xl rounded-3xl p-5 shadow-xl">
-
+    <div className="w-full max-w-full sm:max-w-2xl bg-white/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-xl">
       {/* Header */}
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-semibold text-gray-800">Chats</h1>
+        <h1 className="text-lg sm:text-xl font-semibold text-gray-800">Chats</h1>
         <span className="text-gray-400 text-xl">•••</span>
       </div>
 
@@ -174,7 +172,7 @@ const formatTime = (dateString: string) => {
   placeholder="Search conversations..."
   value={search}
   onChange={(e) => setSearch(e.target.value)}
-  className="w-full px-4 py-2 rounded-xl text-black placeholder:text-gray-500 bg-white/70 border border-gray-200 text-sm outline-none"
+  className="w-full px-3 sm:px-4 py-2 rounded-xl text-black placeholder:text-gray-500 bg-white/70 border border-gray-200 text-sm outline-none"
 />
       </div>
 
@@ -191,12 +189,11 @@ const formatTime = (dateString: string) => {
         <div
           key={conv._id}
           onClick={() => router.push(`/chat/${conv._id}`)}
-          className="flex items-center gap-4 p-3 rounded-2xl cursor-pointer hover:bg-white/80 transition"
-        >
+          className="flex items-center gap-3 sm:gap-4 p-2.5 sm:p-3 rounded-xl sm:rounded-2xl cursor-pointer hover:bg-white/80 transition">
 
           {/* Avatar */}
           <div className="relative">
-            <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
               {otherUser?.name?.charAt(0)}
             </div>
           </div>
@@ -204,23 +201,23 @@ const formatTime = (dateString: string) => {
           {/* Info */}
           <div className="flex-1">
             <div className="flex justify-between items-center">
-              <p className="font-medium text-gray-800">
+              <p className="font-medium text-sm sm:text-base text-gray-800">
   {highlightText(otherUser?.name || "", search)}
 </p>
 
-              <span className="text-xs text-gray-400">
+              <span className="text-[10px] sm:text-xs text-gray-400">
   {formatTime(conv.updatedAt)}
 </span>
             </div>
 
-            <p className="text-sm text-gray-600 truncate">
+            <p className="text-xs sm:text-sm text-gray-600 truncate">
   {highlightText(conv.listingId?.title || "", search)}
 </p>
           </div>
 
           {/* Unread */}
           {conv.unseenCount > 0 && (
-            <div className="bg-indigo-500 text-white text-xs w-6 h-6 flex items-center justify-center rounded-full">
+            <div className="bg-indigo-500 text-white text-xs w-5 h-5 sm:w-6 sm:h-6 text-[10px] sm:text-xs flex items-center justify-center rounded-full">
               {conv.unseenCount}
             </div>
           )}
@@ -234,7 +231,7 @@ const formatTime = (dateString: string) => {
       <img
         src="/images/chats/robot.png"
         alt="No chats"
-        className="w-40 mb-4 opacity-90"
+        className="w-28 sm:w-40 mb-4 opacity-90"
       />
 
       <p className="text-gray-600 font-medium text-lg">

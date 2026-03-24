@@ -68,7 +68,7 @@ export default function HeroSection() {
         </p>
 
 {/* Search Section */}
-<div className="mt-10 mx-3 flex justify-center">
+<div className="mt-10 mx-3 sm:mx-4 md:mx-5 lg:mx-6 flex justify-center">
   <div className="w-full max-w-5xl rounded-3xl px-6 py-6 
   bg-[#f8fafc]/80 backdrop-blur-xl shadow-md border border-white/40">
 

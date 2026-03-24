@@ -71,7 +71,7 @@ export default function NotificationBell() {
 const unreadCount = unreadUsers.size;
   return (
     <div className="relative">
-      <button onClick={handleOpen} className="relative">
+      <button onClick={handleOpen} className="relative shrink-0 ">
         🔔
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1 rounded">
