@@ -6,14 +6,11 @@ import User from "@/models/User";
 User;
 
 export async function GET(req: Request) {
-
   try {
-
     await dbConnect();
 
-    
     const { searchParams } = new URL(req.url);
-    
+
     const keyword = searchParams.get("keyword");
     const category = searchParams.get("category");
     const location = searchParams.get("location");
@@ -23,8 +20,6 @@ export async function GET(req: Request) {
 
     const page = Number(searchParams.get("page") || 1);
     const limit = Number(searchParams.get("limit") || 10);
-
-
 
     const query: Record<string, unknown> = {};
 
@@ -37,57 +32,52 @@ export async function GET(req: Request) {
     }
 
     if (location) {
-      query.location = location;
+      query.location = { $regex: location, $options: "i" };
     }
 
     const priceFilter: { $gte?: number; $lte?: number } = {};
 
     if (minPrice && !isNaN(Number(minPrice))) {
-  priceFilter.$gte = Number(minPrice);
-}
+      priceFilter.$gte = Number(minPrice);
+    }
 
-if (maxPrice && !isNaN(Number(maxPrice))) {
-  priceFilter.$lte = Number(maxPrice);
-}
+    if (maxPrice && !isNaN(Number(maxPrice))) {
+      priceFilter.$lte = Number(maxPrice);
+    }
     if (minPrice || maxPrice) {
       query.price = priceFilter;
     }
-const listings = await Listing.find(query)
-  .populate({
-    path: "sellerId",
-    select: "banned",
-    match: { banned: { $ne: true } }
-  })
-  .sort({
-    isTopListing: -1,
-    isHighlighted: -1,
-    createdAt: -1
-  })
-  .skip((page - 1) * limit)
-  .limit(limit).lean();
+    const listings = await Listing.find(query)
+      .populate({
+        path: "sellerId",
+        select: "banned",
+        match: { banned: { $ne: true } },
+      })
+      .sort({
+        isTopListing: -1,
+        isHighlighted: -1,
+        createdAt: -1,
+      })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .lean();
 
-// remove listings whose seller was banned
-const filteredListings = listings.filter(l => l.sellerId !== null);
+    // remove listings whose seller was banned
+    const filteredListings = listings.filter((l) => l.sellerId !== null);
 
-
-return NextResponse.json({
-  success: true,
-  listings: filteredListings
-});
-
-  
-
+    return NextResponse.json({
+      success: true,
+      listings: filteredListings,
+    });
   } catch (error) {
+    console.error("Listings error:", error);
 
-  console.error("Listings error:", error);
-
-  return NextResponse.json(
-    { 
-      message: "Failed to fetch listings", 
-      error: error instanceof Error ? error.message : "Unknown error"
-    },
-    { status: 500 }
-  );
-
-}
+    return NextResponse.json(
+      {
+        message: "Failed to fetch listings",
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+      { status: 500 },
+    );
+  }
 }

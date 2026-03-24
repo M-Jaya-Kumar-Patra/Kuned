@@ -77,6 +77,8 @@ export default function Footer() {
             </ul>
           </div>
 
+          
+
           {/* Connect */}
           <div>
             <h3 className="text-sm font-semibold text-gray-700 mb-3">
@@ -104,6 +106,16 @@ export default function Footer() {
         </div>
 
       </div>
+
+      <div className="text-center text-sm text-gray-500 py-4 border-t border-gray-200">
+  🚧 This platform is currently in beta.{" "}
+  <Link
+    href="/feedback"
+    className="text-indigo-600 font-medium hover:underline"
+  >
+    Give Feedback
+  </Link>
+</div>
 
       {/* Bottom */}
       <div className="text-center text-sm text-gray-500 py-4 border-t border-gray-200">

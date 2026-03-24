@@ -11,6 +11,12 @@ import TrackView from "@/components/TrackView";
 import RecentlyViewed from "@/components/ReccentlyViewed";
 import Link from "next/link";
 
+
+type Specification = {
+  key: string;
+  value: string;
+};
+
 async function getListing(slug: string) {
   const res = await fetch(
     `${process.env.NEXT_PUBLIC_SITE_URL}/api/listings/${slug}`,
@@ -65,6 +71,22 @@ export default async function ItemPage({
                   HIGHLIGHT
                 </span>
               )}
+              {listing.condition && (
+  <span
+    className={`
+      text-xs px-3 py-1 rounded-full font-semibold shadow-sm capitalize
+      ${
+        listing.condition !== "new"
+          ? "bg-green-500 text-white"
+          : listing.condition === "used"
+          ? "bg-gray-500 text-white"
+          : "bg-purple-500 text-white"
+      }
+    `}
+  >
+    {listing.condition}
+  </span>
+)}
 
               <span className="text-xs text-gray-500 flex items-center gap-1 ml-2">
                 👁 {listing.views} views
@@ -93,6 +115,31 @@ export default async function ItemPage({
             <p className="mt-4 text-gray-600 leading-relaxed">
               {listing.description}
             </p>
+
+            {/* SPECIFICATIONS */}
+{listing.specifications && listing.specifications.length > 0 && (
+  <div className="mt-6">
+    <h3 className="text-xl font-semibold text-gray-800 mb-3">
+      Specifications
+    </h3>
+
+    <div className="border rounded-xl overflow-hidden bg-white/70">
+      {listing.specifications.map((spec: Specification, index: number) => (
+        <div
+          key={index}
+          className={`flex justify-between px-4 py-3 text-lg ${
+            index % 2 === 0 ? "bg-gray-50" : "bg-white"
+          }`}
+        >
+          <span className="text-gray-600">{spec.key}</span>
+          <span className="font-medium text-gray-800">
+            {spec.value}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
             {/* BUTTONS */}
             <div className="mt-6 flex gap-4 flex-wrap items-center">

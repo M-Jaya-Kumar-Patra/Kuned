@@ -81,6 +81,11 @@ specifications: [
     value: String
   }
 ],
+condition: {
+  type: String,
+  enum: ["new", "used", "refurbished"],
+  required: true,
+},
 
 },
 { timestamps: true }

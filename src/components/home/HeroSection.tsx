@@ -34,7 +34,7 @@ export default function HeroSection() {
 
 
   return (
-   <div className="relative py-16 overflow-hidden">
+   <div className="relative pt-16 pb-6 overflow-hidden">
 
   <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden flex items-center justify-center">
 
@@ -59,25 +59,25 @@ export default function HeroSection() {
 
   <div className="max-w-5xl mx-auto text-center relative z-10">
 
-        <h1 className="text-4xl text-black font-bold"> 
+       <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black px-4">
           Buy, Sell & Discover Great Deals Near You
         </h1>
 
-        <p className="text-gray-500 mt-3">
+        <p className="text-gray-500 mt-3 text-sm sm:text-base px-4">
           Find great deals, connect with sellers, and shop securely — all in one place
         </p>
 
 {/* Search Section */}
-<div className="mt-10 flex justify-center">
+<div className="mt-10 mx-3 flex justify-center">
   <div className="w-full max-w-5xl rounded-3xl px-6 py-6 
   bg-[#f8fafc]/80 backdrop-blur-xl shadow-md border border-white/40">
 
     {/* Top Row */}
-    <div className="flex items-center gap-4">
+    <div className="flex flex-col sm:flex-row gap-3">
 
       {/* Search Input */}
-      <div className="flex items-center flex-1 h-[56px] px-5 rounded-xl
-      bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500 shadow-sm">
+      <div className="flex items-center w-full h-[50px] sm:h-[56px] px-4 rounded-xl
+bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-500">
 
         <Search className="text-white/80 w-5 h-5 mr-3" />
 
@@ -94,14 +94,14 @@ export default function HeroSection() {
       {/* Search Button */}
       <button 
       onClick={handleSearch}
-      className="h-[56px] px-8 rounded-xl 
+      className=" 
       bg-gradient-to-r from-indigo-500 to-blue-600 
-      text-white font-medium text-[15px] shadow-sm hover:opacity-95 transition">
+      text-white font-medium text-[15px] shadow-sm hover:opacity-95 transition   h-[50px] sm:h-[56px] w-full sm:w-auto px-6 rounded-xl">
         Search
       </button>
 
       {/* Menu Button */}
-      <div className="h-[56px] w-[56px] flex items-center justify-center 
+      <div className="hidden sm:flex h-[56px] w-[56px] items-center justify-center
       rounded-xl bg-[#eef2ff] shadow-sm cursor-pointer">
         <Menu className="w-5 h-5 text-indigo-500" />
       </div>

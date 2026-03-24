@@ -40,10 +40,15 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 h-16 backdrop-blur-md bg-white/95 border-b border-gray-200 px-6 py-2
      flex justify-between items-center shadow-sm">
       
-      {/* Logo */}
+     <div className="flex justify-center items-center">
+       {/* Logo */}
       <Link href="/" className="flex items-center gap-2 shrink-0">
         <Image src="/images/logo_light.png" alt="Kuned" width={140} height={46}/>
       </Link>
+      <span className="ml-2 text-xs bg-indigo-600 text-white px-2 py-0.5 rounded-full font-semibold">
+  BETA
+</span>
+     </div>
 
       
       {/* Right Section */}

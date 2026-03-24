@@ -40,7 +40,7 @@ const latest = allLatest.length < 6
 const isLatestTwoRows = latest.length > 3;
 
   return (
-    <div className="grid grid-cols-2 gap-6 mt-12">
+    <div className="grid grid-cols-1 lg:grid-cols-2  gap-6 mt-12">
       {/* 🔴 URGENT DEALS */}
       <div
         className="
@@ -69,7 +69,7 @@ const isLatestTwoRows = latest.length > 3;
 
         {/* Cards */}
         <div
-          className={`grid grid-cols-3 ${isUrgentTwoRows ? "gap-3" : "gap-5"}`}
+          className={`grid grid-cols-2 sm:grid-cols-3 ${isUrgentTwoRows ? "gap-3" : "gap-5"}`}
         >
           {urgent.map((item) => (
             <Link key={item._id} href={`/item/${item.slug}`}>

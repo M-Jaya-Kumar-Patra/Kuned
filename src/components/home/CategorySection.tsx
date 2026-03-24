@@ -42,14 +42,14 @@ export default function CategorySection() {
       </div>
 
       {/* Category Cards */}
-      <div className="grid grid-cols-5 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 sm:gap-6">
 
         {categories.map((cat, i) => (
           <div
             key={i}
             onClick={() => handleCategoryClick(cat.name)}
             className="bg-white/70 backdrop-blur-md 
-            rounded-2xl p-6 text-center 
+            rounded-2xl p-4 sm:p-6 text-center 
             shadow-sm hover:shadow-md 
             transition cursor-pointer border border-white/40"
           >
@@ -58,7 +58,7 @@ export default function CategorySection() {
               <img
                 src={cat.image}
                 alt={cat.name}
-                className="w-16 h-16 object-contain"
+                className="w-12 h-12 sm:w-16 sm:h-16"
               />
             </div>
 

@@ -162,7 +162,7 @@ export default function ProfilePage() {
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="px-2 py-1 rounded border text-lg"
+                  className="px-2 py-1 rounded border text-lg placeholder:text-gray-400 text-gray-900"
                 />
                 <button
                   onClick={async () => {
@@ -440,8 +440,8 @@ export default function ProfilePage() {
           </div>
 
           {/* LIST */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 cursor-pointer">
-            {listings.slice(0, 2).map((item) => (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 cursor-pointer">
+            {listings.slice(0, 3).map((item) => (
               <div
                 key={item._id}
                 onClick={()=>router.push(`/item/${item?.slug}`)}

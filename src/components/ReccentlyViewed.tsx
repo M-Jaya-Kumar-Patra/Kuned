@@ -75,7 +75,7 @@ export default function RecentlyViewed() {
             <Link key={item._id} href={`/item/${item.slug}`}>
 
               <div className="
-                min-w-[220px]
+                min-w-[160px] sm:min-w-[220px]
                 bg-white
                 rounded-2xl
                 p-3
@@ -88,7 +88,7 @@ export default function RecentlyViewed() {
                 <img
                   src={item.images?.[0]}
                   alt={item.title}
-                  className="w-full h-[120px] object-cover rounded-xl"
+                  className="w-full h-[100px] sm:h-[120px] object-cover rounded-xl"
                 />
 
                 {/* Info */}

@@ -20,6 +20,7 @@ type CreateListingBody = {
   location: string;
   images: string[];
   specifications?: Specification[];
+  condition: "new" | "used" | "refurbished"; // ✅ added
 };
 
 export async function POST(req: Request) {
@@ -52,14 +53,18 @@ const {
   category,
   location,
   images,
-  specifications
+  specifications,
+  condition,
 } = body;
 
-    if (!title || !description || price == null || !category || !location) {
-      return NextResponse.json(
-        { message: "Missing required fields" },
-        { status: 400 }
-      );
+
+console.log("tttttttttttttttt: ", condition)
+
+    if (!title || !description || price == null || !category || !condition || !location) {
+       return NextResponse.json(
+    { message: "All required fields, including condition, must be provided." },
+    { status: 400 }
+  );
     }
 
     
@@ -82,6 +87,7 @@ const {
       category,
       location,
       images,
+      condition,
       sellerId: user.id,
       slug,
       specifications: cleanSpecs

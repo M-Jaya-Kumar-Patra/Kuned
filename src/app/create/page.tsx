@@ -14,6 +14,7 @@ export default function CreateListingPage() {
     price: "",
     category: "",
     location: "",
+    condition: "",
   });
 
   const [specs, setSpecs] = useState([
@@ -36,6 +37,10 @@ export default function CreateListingPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!images.length) {
+  alert("Please upload at least one image of the item.");
+  return; // ❗ THIS IS IMPORTANT
+}
     try {
       await api.post("/listings/create", {
         ...form,
@@ -203,6 +208,22 @@ const removeSpec = (index: number) => {
                 </div>
 
                 <div>
+  <h3 className="text-sm text-gray-600 mb-2">Condition</h3>
+
+  <select
+    name="condition"
+    required
+    className="w-full p-3 rounded-xl border bg-white/60 outline-none text-gray-800"
+    onChange={handleChange}
+  >
+    <option value="">Select Condition</option>
+    <option value="new">New</option>
+    <option value="used">Used</option>
+    <option value="refurbished">Refurbished</option>
+  </select>
+</div>
+
+                <div>
   <h3 className="text-sm text-gray-600 mb-3">Specifications</h3>
 
   {specs.map((spec, index) => (
@@ -277,6 +298,7 @@ const removeSpec = (index: number) => {
                   <input
                     type="file"
                     multiple
+                    
                     accept="image/*"
                     onChange={handleImageChange}
                     className="hidden"

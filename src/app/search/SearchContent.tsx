@@ -98,7 +98,7 @@ export default function SearchContent() {
                   value={location}
                   onChange={(e) => setLocation(e.target.value)}
                   placeholder="Location"
-                  className="w-full px-3 py-2 rounded-lg border bg-white"
+                  className="w-full px-3 py-2 rounded-lg border bg-white placeholder:text-gray-400 text-gray-900"
                 />
               </div>
 
@@ -111,14 +111,14 @@ export default function SearchContent() {
                     value={minPrice}
                     onChange={(e) => setMinPrice(e.target.value)}
                     placeholder="Min"
-                    className="w-full px-2 py-1 border rounded"
+                    className="w-full px-2 py-1 border rounded  placeholder:text-gray-400 text-gray-900"
                   />
 
                   <input
                     value={maxPrice}
                     onChange={(e) => setMaxPrice(e.target.value)}
                     placeholder="Max"
-                    className="w-full px-2 py-1 border rounded"
+                    className="w-full px-2 py-1 border rounded  placeholder:text-gray-400 text-gray-900"
                   />
                 </div>
               </div>

@@ -2,6 +2,9 @@
 
 import { useEffect, useState } from "react";
 import api from "@/services/api";
+import { useRouter } from "next/navigation";
+import { AxiosError } from "axios";
+
 
 type Report = {
   _id: string;
@@ -24,6 +27,8 @@ type Report = {
 };
 export default function AdminReportsPage() {
 
+const router = useRouter();
+
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -35,11 +40,15 @@ export default function AdminReportsPage() {
 
       setReports(res.data);
 
-    } catch (err) {
+    } catch (err: unknown) {
+  const error = err as AxiosError;
 
-      console.error("Failed to load reports", err);
-
-    } finally {
+  if (error.response?.status === 404) {
+    router.push("/404");
+  } else {
+    console.error("Failed to load reports", error);
+  }
+} finally {
 
       setLoading(false);
 

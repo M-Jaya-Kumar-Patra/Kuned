@@ -48,7 +48,7 @@ export default function FeaturedListings({ listings }: Props) {
             <div
               key={item._id}
               className="
-                min-w-[220px]
+                min-w-[180px] sm:min-w-[220px]
                 bg-white
                 rounded-2xl
                 shadow-sm hover:shadow-md
@@ -64,7 +64,7 @@ export default function FeaturedListings({ listings }: Props) {
                 <img
                   src={item.images?.[0]}
                   alt={item.title}
-                  className="w-full h-[150px] object-cover"
+                  className="w-full h-[130px] sm:h-[150px] object-cover"
                 />
 
                 {/* ✅ REAL BADGES (DATA-DRIVEN) */}
