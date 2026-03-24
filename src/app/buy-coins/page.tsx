@@ -1,5 +1,8 @@
 "use client";
 
+import { useContext, useEffect } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { load } from "@cashfreepayments/cashfree-js";
 import Image from "next/image";
@@ -17,8 +20,25 @@ const packages: CoinPackage[] = [
 ];
 
 export default function BuyCoinsPage() {
+  const auth = useContext(AuthContext);
+  const router = useRouter();
+
+
   const [loading, setLoading] = useState<string | null>(null);
 
+
+  useEffect(() => {
+    if (!auth?.user) {
+      router.push("/login"); // redirect if not logged in
+    }
+  }, [auth?.user]);
+
+  // ⛔ prevent rendering before check
+  if (!auth?.user) {
+    return null; // or loader
+  }
+
+  
   const handleBuy = async (pkg: CoinPackage) => {
     try {
       setLoading(pkg.id);
