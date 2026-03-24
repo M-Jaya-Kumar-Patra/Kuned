@@ -11,9 +11,9 @@ type CoinPackage = {
 };
 
 const packages: CoinPackage[] = [
-  { id: "starter", coins: 10, price: 1 },
-  { id: "popular", coins: 25, price: 99 },
-  { id: "pro", coins: 60, price: 199 },
+  { id: "starter", coins: 10, price: 10 },
+  { id: "popular", coins: 50, price: 39 },
+  { id: "pro", coins: 120, price: 79 },
 ];
 
 export default function BuyCoinsPage() {
@@ -23,8 +23,6 @@ export default function BuyCoinsPage() {
     try {
       setLoading(pkg.id);
 
-
-      console.log("casssssssssssssssshhhhhhh")
       const token = localStorage.getItem("token");
 
       const res = await fetch("/api/payments/create-order", {

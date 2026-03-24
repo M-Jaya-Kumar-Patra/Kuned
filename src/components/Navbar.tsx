@@ -78,7 +78,7 @@ export default function Navbar() {
               className="flex items-center gap-2"
             >
               <img
-                src={user?.avatar || "/default-avatar.png"}
+                src={user?.avatar || "/images/default-avatar.png"}
                 alt="profile"
                 className="w-9 h-9 rounded-full object-cover border"
               />

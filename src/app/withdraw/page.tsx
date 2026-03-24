@@ -13,6 +13,11 @@ export default function WithdrawPage() {
 
   const [paidCoins, setPaidCoins] = useState(0);
 
+  const amountNum = Number(form.amount) || 0;
+const fee = (amountNum * 1.6) / 100;
+const finalAmount = amountNum - fee;
+
+
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
@@ -95,7 +100,24 @@ export default function WithdrawPage() {
               setForm({ ...form, amount: e.target.value })
             }
           />
+         {amountNum > 0 && (
+  <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 text-sm text-gray-700">
+    <div className="flex justify-between">
+      <span>Amount</span>
+      <span>₹{amountNum.toFixed(2)}</span>
+    </div>
 
+    <div className="flex justify-between text-red-500">
+      <span>Processing Fee (1.6%)</span>
+      <span>- ₹{fee.toFixed(2)}</span>
+    </div>
+
+    <div className="flex justify-between font-semibold text-green-600 mt-2 border-t pt-2">
+      <span>You will receive</span>
+      <span>₹{finalAmount.toFixed(2)}</span>
+    </div>
+  </div>
+)}
           <input
             placeholder="Bank Name"
             className="w-full px-4 py-2 rounded-xl border border-gray-200 bg-white/80 text-gray-900 outline-none"
