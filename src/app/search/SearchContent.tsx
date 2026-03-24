@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 type Listing = {
   _id: string;
@@ -15,6 +16,8 @@ type Listing = {
 };
 
 export default function SearchContent() {
+  const auth = useContext(AuthContext);
+const router = useRouter();
   const searchParams = useSearchParams();
 
   const [listings, setListings] = useState<Listing[]>([]);
@@ -27,6 +30,14 @@ export default function SearchContent() {
   const [maxPrice, setMaxPrice] = useState("");
 
   const [showFilterModal, setShowFilterModal] = useState(false);
+
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
 
   useEffect(() => {

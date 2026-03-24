@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 
 type SavedListing = {
@@ -18,7 +20,17 @@ type SavedListing = {
 
 
 export default function SavedListings() {
+  const auth = useContext(AuthContext);
+const router = useRouter();
   const [listings, setListings] = useState<SavedListing[]>([]);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   useEffect(() => {
     const fetchSaved = async () => {

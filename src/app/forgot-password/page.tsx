@@ -1,15 +1,25 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function ForgotPasswordPage() {
 
   const router = useRouter();
+  const auth = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [showPopup, setShowPopup] = useState(false);
   const [timer, setTimer] = useState(60);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   const handleSubmit = async () => {
 

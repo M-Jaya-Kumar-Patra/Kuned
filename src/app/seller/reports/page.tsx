@@ -1,7 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 type Report = {
   _id: string;
@@ -18,8 +20,17 @@ type Report = {
 
 
 export default function SellerReportsPage() {
+  const auth = useContext(AuthContext);
+const router = useRouter();
 
   const [reports, setReports] = useState<Report[]>([]);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   useEffect(() => {
 

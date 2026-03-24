@@ -1,7 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
+
+import { useRouter } from "next/router";
+import { AuthContext } from "@/context/AuthContext";
 
 
 type CoinTransaction = {
@@ -16,8 +19,20 @@ type CoinTransaction = {
 
 export default function CoinHistoryPage() {
 
+  const auth = useContext(AuthContext);
+    const router = useRouter();
+  
+
   const [transactions, setTransactions] = useState<CoinTransaction[]>([]);
   const [loading, setLoading] = useState(true);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   useEffect(() => {
 
@@ -46,6 +61,14 @@ export default function CoinHistoryPage() {
     fetchHistory();
 
   }, []);
+
+  if (!auth?.user) {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <p className="text-gray-500">Checking authentication...</p>
+    </div>
+  );
+}
 
   if (loading) {
     return <p className="p-6">Loading coin history...</p>;

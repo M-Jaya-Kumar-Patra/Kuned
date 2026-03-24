@@ -1,17 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import api from "@/services/api";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function VerifyEmailContent() {
   const params = useSearchParams();
   const router = useRouter();
 
+  const auth = useContext(AuthContext);
+
   const email = params.get("email");
 
   const [pin, setPin] = useState("");
   const [timer, setTimer] = useState(30);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   useEffect(() => {
     if (timer === 0) return;

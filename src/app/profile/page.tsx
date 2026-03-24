@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 type User = {
   name: string;
@@ -55,6 +56,13 @@ export default function ProfilePage() {
 
 
   const router = useRouter();
+  const auth = useContext(AuthContext);
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   useEffect(() => {
   const fetchStats = async () => {

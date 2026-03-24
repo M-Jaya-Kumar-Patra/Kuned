@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function ResetPasswordContent() {
   const params = useSearchParams();
   const router = useRouter();
+  const auth = useContext(AuthContext);
 
   const token = params.get("token");
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [strength, setStrength] = useState("");
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   // 🔥 Password Strength
   const checkStrength = (pwd: string) => {

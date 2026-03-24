@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 type Listing = {
   _id: string;
@@ -26,8 +28,19 @@ export default function SellerPage({
   params: Promise<{ sellerId: string }>;
 }) {
 
+  const auth = useContext(AuthContext);
+const router = useRouter();
+
   const [seller, setSeller] = useState<Seller | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   useEffect(() => {
 

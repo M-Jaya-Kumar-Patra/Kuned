@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
@@ -16,9 +16,18 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  if (!auth) return null;
+  
+// ✅ ALWAYS call hooks first
+useEffect(() => {
+  if (auth?.user) {
+    router.push("/");
+  }
+}, [auth?.user, router]); // ✅ include router
 
-  const { login } = auth;
+// ⛔ AFTER hooks, you can conditionally return
+if (!auth) return null;
+
+const { login } = auth;
 
   const handleLogin = async () => {
     try {

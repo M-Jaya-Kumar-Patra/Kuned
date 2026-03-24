@@ -25,6 +25,8 @@ type Conversation = {
 };
 
 export default function ChatPage() {
+
+  
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [search, setSearch] = useState("");
   const router = useRouter();
@@ -32,6 +34,14 @@ export default function ChatPage() {
   const pathname = usePathname();
 
   const userId = auth?.user?._id;
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
+
 
   const fetchChats = async () => {
     try {

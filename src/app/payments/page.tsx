@@ -1,6 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 
 type Payment = {
   _id: string;
@@ -12,7 +14,15 @@ type Payment = {
 };
 
 export default function PaymentHistoryPage() {
+  const auth = useContext(AuthContext);
+const router = useRouter();
   const [payments, setPayments] = useState<Payment[]>([]);
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   useEffect(() => {
     const fetchPayments = async () => {

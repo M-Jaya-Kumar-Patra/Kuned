@@ -1,8 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { AuthContext } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
+import { useContext, useEffect, useState } from "react";
 
 export default function WithdrawPage() {
+
+  const auth = useContext(AuthContext);
+const router = useRouter();
+
+
   const [form, setForm] = useState({
     amount: "",
     bankName: "",
@@ -17,6 +24,12 @@ export default function WithdrawPage() {
 const fee = (amountNum * 1.6) / 100;
 const finalAmount = amountNum - fee;
 
+
+useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   useEffect(() => {
     const fetchUser = async () => {

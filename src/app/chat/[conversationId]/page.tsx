@@ -3,8 +3,9 @@
 import { useEffect, useState, useRef, useContext } from "react";
 import { useParams } from "next/navigation";
 import api from "@/services/api";
-import { AuthContext } from "@/context/AuthContext";
 import { socket } from "@/lib/socketClient";
+import { useRouter } from "next/router";
+import { AuthContext } from "@/context/AuthContext";
 
 type Participant = {
   _id: string;
@@ -32,6 +33,9 @@ type MessagesSeenEvent = {
 export default function ChatPage() {
   const params = useParams();
   const auth = useContext(AuthContext);
+  const router = useRouter();
+
+
 
   const conversationId =
     typeof params.conversationId === "string" ? params.conversationId : "";
@@ -43,6 +47,13 @@ export default function ChatPage() {
   const [otherUserId, setOtherUserId] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   // Auto scroll
   useEffect(() => {

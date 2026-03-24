@@ -1,13 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function PaymentStatusContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const auth = useContext(AuthContext);
 
   const [status, setStatus] = useState("loading");
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   useEffect(() => {
   const orderId = searchParams.get("orderId");

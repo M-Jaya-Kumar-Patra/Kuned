@@ -1,8 +1,9 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
+import { AuthContext } from "@/context/AuthContext";
 
 const reasons = [
   { key: "spam", label: "Spam", icon: "🚫" },
@@ -16,6 +17,7 @@ const reasons = [
 export default function ReportContent() {
   const params = useSearchParams();
   const router = useRouter();
+  const auth = useContext(AuthContext);
 
   const listingId = params.get("listing");
 
@@ -23,6 +25,12 @@ export default function ReportContent() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   const submitReport = async () => {
     if (!listingId) return alert("Invalid listing");

@@ -1,14 +1,21 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
+import { AuthContext } from "@/context/AuthContext";
 
 export default function FeedbackPage() {
+  const auth = useContext(AuthContext);
+  const router = useRouter();
   const [message, setMessage] = useState("");
   const [type, setType] = useState("bug");
 
-  const router = useRouter();
+  useEffect(() => {
+  if (!auth?.user) {
+    router.push("/login");
+  }
+}, [auth?.user]);
 
   const handleSubmit = async () => {
   if (!message.trim()) return alert("Please enter your feedback");

@@ -33,7 +33,6 @@ export default async function ItemPage({
   params: { slug: string };
 }) {
   const { slug } = await params;
-  console.log("Slug param:", slug);
 
   const listing = await getListing(slug);
 
