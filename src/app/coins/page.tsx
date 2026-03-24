@@ -3,7 +3,7 @@
 import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
 

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useContext } from "react";
 import { useParams } from "next/navigation";
 import api from "@/services/api";
 import { socket } from "@/lib/socketClient";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 
 type Participant = {
