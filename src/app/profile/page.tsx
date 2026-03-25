@@ -15,6 +15,8 @@ type User = {
   paidCoins: number;
   referralCode: string;
   banned: boolean;
+  referrals: number;
+  referralCoins: number; 
 };
 
 type Stats = {
@@ -104,7 +106,11 @@ export default function ProfilePage() {
   useEffect(() => {
     const loadData = async () => {
       const userRes = await api.get("/user/me");
-      setUser(userRes.data.user);
+      setUser({
+  ...userRes.data.user,
+  referrals: userRes.data.referrals,
+  referralCoins: userRes.data.referralCoins,
+});
 
       const statsRes = await api.get("/user/stats");
       setStats(statsRes.data);
@@ -524,11 +530,11 @@ export default function ProfilePage() {
             {/* FOOTER STATS */}
             <div className="hidden sm:block text-sm text-gray-500 flex gap-3">
               <span>
-                Referrals <b className="text-gray-700">12</b>
+                Referrals <b className="text-gray-700">{user.referrals || 0}</b>
               </span>
               <span>|</span>
               <span>
-                Coins Earned <b className="text-gray-700">120</b>
+                Coins Earned <b className="text-gray-700">{user.referralCoins || 0}</b>
               </span>
             </div>
           </div>
@@ -587,11 +593,11 @@ export default function ProfilePage() {
           {/* FOOTER STATS */}
           <div className="block sm:hidden mt-4 text-sm text-gray-500 border-t pt-3 flex gap-3">
             <span>
-              Referrals <b className="text-gray-700">12</b>
+              Referrals <b className="text-gray-700">{user.referrals || 0}</b>
             </span>
             <span>|</span>
             <span>
-              Coins Earned <b className="text-gray-700">120</b>
+              Coins Earned <b className="text-gray-700">{user.referralCoins || 0}</b>
             </span>
           </div>
         </div>
