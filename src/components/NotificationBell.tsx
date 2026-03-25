@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useRef  } from "react";
 import api from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
 import type { Notification } from "@/types/notification";
@@ -14,6 +14,7 @@ export default function NotificationBell() {
 
   const user = auth?.user;
   const pathname = usePathname();
+  const bellRef = useRef<HTMLDivElement | null>(null);
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [open, setOpen] = useState(false);
@@ -41,6 +42,23 @@ export default function NotificationBell() {
   fetchNotifications();
 
 }, [user, pathname]);
+
+useEffect(() => {
+  function handleClickOutside(event: MouseEvent) {
+    if (
+      bellRef.current &&
+      !bellRef.current.contains(event.target as Node)
+    ) {
+      setOpen(false);
+    }
+  }
+
+  document.addEventListener("mousedown", handleClickOutside);
+
+  return () => {
+    document.removeEventListener("mousedown", handleClickOutside);
+  };
+}, []);
 
   const handleOpen = async () => {
     const nextOpen = !open;
@@ -70,8 +88,11 @@ export default function NotificationBell() {
 
 const unreadCount = unreadUsers.size;
   return (
-    <div className="relative">
-      <button onClick={handleOpen} className="relative shrink-0 ">
+    <div ref={bellRef} className="relative">
+      <button onClick={(e) => {
+  e.stopPropagation();
+  handleOpen();
+}} className="relative shrink-0 ">
         🔔
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs px-1 rounded">

@@ -246,7 +246,7 @@ export default function SearchContent() {
         <input
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="e.g. Pulaha HOR"
+          placeholder="Area, landmark or city"
           className="w-full px-3 py-2 border rounded-lg placeholder:text-gray-400 text-gray-900"
         />
       </div>

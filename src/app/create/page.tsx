@@ -292,7 +292,7 @@ if (!auth?.user) {
 
                   <input
                     name="location"
-                    placeholder="e.g.  HOR, VSSUT"
+                    placeholder="Area, landmark or city"
                     className="w-full p-2.5 sm:p-3 text-sm sm:text-base rounded-xl border bg-white/60 outline-none text-gray-800
   placeholder:text-gray-400"
                     onChange={handleChange}
