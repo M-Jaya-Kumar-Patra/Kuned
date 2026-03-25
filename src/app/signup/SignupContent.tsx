@@ -207,6 +207,7 @@ export default function SignupContent() {
                 try {
                   const res = await api.post("/auth/google", {
                     credential: credentialResponse.credential,
+                    referralCode: form.referralCode,
                   });
 
                   const { token, user } = res.data;

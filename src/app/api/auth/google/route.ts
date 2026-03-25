@@ -8,6 +8,7 @@ import { generateReferralCode } from "@/lib/generateReferralCode";
 // ✅ ADD THESE
 import { sendEmail } from "@/lib/email";
 import { loginAlertEmail } from "@/lib/emailTemplates/loginAlertEmail";
+import { earnCoins } from "@/utils/coinService";
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
@@ -15,7 +16,7 @@ export async function POST(req: Request) {
   try {
     await dbConnect();
 
-    const { credential } = await req.json();
+    const { credential, referralCode } = await req.json();
 
     const ticket = await client.verifyIdToken({
       idToken: credential,
@@ -32,18 +33,41 @@ export async function POST(req: Request) {
 
     const refCode = generateReferralCode();
 
+    let referredUser = null;
+
+if (referralCode) {
+  referredUser = await User.findOne({ referralCode });
+
+  if (!referredUser) {
+    return NextResponse.json(
+      { message: "Invalid referral code" },
+      { status: 400 }
+    );
+  }
+}
     // 🆕 NEW USER
     if (!user) {
-      user = await User.create({
-        name,
-        email,
-        avatar: picture,
-        provider: "google",
-        password: null,
-        referralCode: refCode,
-        emailVerified: true,
-      });
-    }
+  user = await User.create({
+    name,
+    email,
+    avatar: picture,
+    provider: "google",
+    password: null,
+    referralCode: refCode,
+    referredBy: referredUser ? referredUser._id : null, // ✅ ADD THIS
+    emailVerified: true,
+  });
+
+  // 🎁 reward referrer
+  if (referredUser) {
+    await earnCoins(
+      referredUser._id.toString(),
+      10,
+      "bonus",
+      "referral_bonus"
+    );
+  }
+}
 
     // 🔁 EXISTING USER (LOCAL → GOOGLE)
     if (user.provider === "local") {
