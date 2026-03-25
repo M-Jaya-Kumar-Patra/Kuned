@@ -7,7 +7,6 @@ import Listing from "@/models/Listing";
 export async function GET(req: Request) {
 
   const auth = requireAuth(req); if (auth instanceof Response) return auth;
-  if (auth instanceof Response) return auth;
 
   await dbConnect();
 

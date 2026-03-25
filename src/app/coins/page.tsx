@@ -101,14 +101,9 @@ export default function CoinHistoryPage() {
         <div className="flex items-center gap-4">
           <img src="/images/quickLinks/coins.png" className="w-14" />
           <div>
-            <p className="text-3xl font-bold">
-              {transactions.reduce((acc, t) => {
-                return t.transactionType === "earn"
-                  ? acc + t.amount
-                  : acc - t.amount;
-              }, 0)}{" "}
-              coins
-            </p>
+            <p className="text-2xl md:text-3xl font-bold">
+  {(auth?.user?.bonusCoins || 0) + (auth?.user?.paidCoins || 0)} coins
+</p>
             <p className="text-sm opacity-80">Total Coins</p>
           </div>
         </div>

@@ -10,7 +10,6 @@ import { COIN_COST } from "@/constants/coins";
 export async function POST(req: Request) {
 
   const auth = requireAuth(req); if (auth instanceof Response) return auth;
-  if (auth instanceof Response) return auth;
 
   await dbConnect();
 

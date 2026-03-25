@@ -67,7 +67,6 @@ export async function DELETE(
 
 
   const auth = requireAuth(req); if (auth instanceof Response) return auth;
-  if (auth instanceof Response) return auth;
 
   const user = auth as { id: string };
 
@@ -104,7 +103,6 @@ export async function PUT(
   const { slug } = await params;
 
   const auth = requireAuth(req); if (auth instanceof Response) return auth;
-  if (auth instanceof Response) return auth;
 
   const user = auth as { id: string };
 

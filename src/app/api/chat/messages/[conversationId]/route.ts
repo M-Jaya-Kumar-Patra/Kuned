@@ -9,7 +9,6 @@ export async function GET(
 ) {
 
   const auth = requireAuth(req); if (auth instanceof Response) return auth;
-  if (auth instanceof Response) return auth;
 
   await dbConnect();
 
