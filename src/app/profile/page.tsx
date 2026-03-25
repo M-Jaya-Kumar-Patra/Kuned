@@ -121,93 +121,99 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#e4e7f9] pb-10">
-      {/* ===== PROFILE HEADER ===== */}
-      <div
-        className="relative w-full h-[220px]  px-6 flex items-center justify-between overflow-hidden"
-        style={{
-          backgroundImage: "url('/images/profile_bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {/* Overlay */}
-        <div className="absolute inset-0  backdrop-blur-[1px]"></div>
+     {/* ===== PROFILE HEADER ===== */}
+<div
+  className="relative w-full min-h-[220px] px-4 sm:px-6 py-6 flex items-center overflow-hidden"
+  style={{
+    backgroundImage: "url('/images/profile_bg.png')",
+    backgroundSize: "cover",
+    backgroundPosition: "center",
+  }}
+>
+  {/* Overlay */}
+  <div className="absolute inset-0 backdrop-blur-[1px]"></div>
 
-        <div className="w-full max-w-6xl mx-auto px-4 flex items-center justify-between ">
-          <div className="relative z-10 flex items-center gap-4">
-          {/* AVATAR */}
-          <div className="relative group">
-            <img
-              src={user?.avatar || "/images/default-avatar.png"}
-              className="w-36 h-36 rounded-full border-4 border-white shadow object-cover"
-            />
+  <div className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center sm:justify-between gap-6">
+    
+    {/* LEFT SECTION */}
+    <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+      
+      {/* AVATAR */}
+      <div className="relative group">
+        <img
+          src={user?.avatar || "/images/default-avatar.png"}
+          className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full border-4 border-white shadow object-cover"
+        />
 
-            {/* Upload Button */}
-            <label className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-2 py-1 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition">
-              Change
-              <input
-                type="file"
-                className="hidden"
-                onChange={async (e) => {
-                  const file = e.target.files?.[0];
-                  if (!file) return;
+        {/* Upload Button */}
+        <label className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-black/60 text-white text-xs px-2 py-1 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition">
+          Change
+          <input
+            type="file"
+            className="hidden"
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
 
-                  const formData = new FormData();
-                  formData.append("avatar", file);
+              const formData = new FormData();
+              formData.append("avatar", file);
 
-                  const res = await api.put("/user/update-avatar", formData);
-                  setUser(res.data);
-                }}
-              />
-            </label>
-          </div>
-
-          {/* USER INFO */}
-          <div>
-            {/* NAME EDIT */}
-            {editing ? (
-              <div className="flex gap-2 items-center">
-                <input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  className="px-2 py-1 rounded border text-lg placeholder:text-gray-400 text-gray-900"
-                />
-                <button
-                  onClick={async () => {
-                    const res = await api.put("/user/update", { name });
-                    setUser(res.data);
-                    setEditing(false);
-                  }}
-                  className="bg-black text-white px-3 py-1 rounded text-sm"
-                >
-                  Save
-                </button>
-              </div>
-            ) : (
-              <h2
-                className="text-3xl font-semibold text-gray-800 cursor-pointer"
-                onClick={() => setEditing(true)}
-              >
-                {user.name}
-              </h2>
-            )}
-
-            <p className="text-lg text-gray-600">{user.email}</p>
-            <p className="text-lg mt-1 text-black">
-              🪙 {user.bonusCoins + user.paidCoins} coins
-            </p>
-          </div>
-        </div>
-
-        {/* EDIT BUTTON */}
-        <button
-          onClick={() => setEditing(true)}
-          className="relative z-10 bg-white/70 backdrop-blur-md text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-white transition"
-        >
-          ✏️ Edit Profile
-        </button>
-        </div>
+              const res = await api.put("/user/update-avatar", formData);
+              setUser(res.data);
+            }}
+          />
+        </label>
       </div>
+
+      {/* USER INFO */}
+      <div>
+        {/* NAME EDIT */}
+        {editing ? (
+          <div className="flex flex-col sm:flex-row gap-2 items-center">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="px-2 py-1 rounded border text-base sm:text-lg text-gray-900 w-full sm:w-auto"
+            />
+            <button
+              onClick={async () => {
+                const res = await api.put("/user/update", { name });
+                setUser(res.data);
+                setEditing(false);
+              }}
+              className="bg-black text-white px-3 py-1 rounded text-sm w-full sm:w-auto"
+            >
+              Save
+            </button>
+          </div>
+        ) : (
+          <h2
+            className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 cursor-pointer"
+            onClick={() => setEditing(true)}
+          >
+            {user.name}
+          </h2>
+        )}
+
+        <p className="text-sm sm:text-base text-gray-600 break-all">
+          {user.email}
+        </p>
+
+        <p className="text-sm sm:text-base mt-1 text-black">
+          🪙 {user.bonusCoins + user.paidCoins} coins
+        </p>
+      </div>
+    </div>
+
+    {/* EDIT BUTTON */}
+    <button
+      onClick={() => setEditing(true)}
+      className="relative z-10 bg-white/80 backdrop-blur-md text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-white transition w-full sm:w-auto"
+    >
+      ✏️ Edit Profile
+    </button>
+  </div>
+</div>
 
       <div className="max-w-6xl mx-auto mt-6 px-4 space-y-6">
         {/* ===== WALLET ===== */}

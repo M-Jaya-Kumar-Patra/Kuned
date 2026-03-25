@@ -234,6 +234,8 @@ export default function SignupContent() {
               className="text-blue-600 cursor-pointer hover:underline"
             >
               Login
+
+              
             </span>
           </p>
         </div>
