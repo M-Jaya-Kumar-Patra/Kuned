@@ -26,7 +26,6 @@ export async function GET(req: Request) {
       referredBy: dbUser._id.toString(),
     });
 
-    // ✅ Calculate earned coins
     const referralCoins = referralCount * 10;
 
     return NextResponse.json({
