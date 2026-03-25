@@ -3,19 +3,19 @@ export const coinPackages = [
 {
     id: "starter",
     coins: 10,
-    price: 1
+    price: 10
 },
 
 {
     id: "popular",
-    coins: 25,
-    price: 99
+    coins: 50,
+    price: 39
 },
 
 {
     id: "pro",
-    coins: 60,
-    price: 199
+    coins: 120,
+    price: 79
 }
 
 ];
