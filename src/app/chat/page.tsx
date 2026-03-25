@@ -14,6 +14,7 @@ type User = {
 type Listing = {
   _id: string;
   title: string;
+  images?: string[];
 };
 
 type Conversation = {
@@ -203,9 +204,19 @@ const formatTime = (dateString: string) => {
 
           {/* Avatar */}
           <div className="relative">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-              {otherUser?.name?.charAt(0)}
-            </div>
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+  {conv.listingId?.images?.[0] ? (
+    <img
+      src={conv.listingId.images[0]}
+      alt="product"
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">
+      No Image
+    </div>
+  )}
+</div>
           </div>
 
           {/* Info */}

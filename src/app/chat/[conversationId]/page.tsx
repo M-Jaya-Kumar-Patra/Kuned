@@ -6,6 +6,8 @@ import api from "@/services/api";
 import { socket } from "@/lib/socketClient";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import { FiSend } from "react-icons/fi";
+
 
 type Participant = {
   _id: string;
@@ -30,6 +32,13 @@ type MessagesSeenEvent = {
   conversationId: string;
 };
 
+type Listing = {
+  _id: string;
+  title: string;
+  images?: string[];
+};
+
+
 export default function ChatPage() {
   const params = useParams();
   const auth = useContext(AuthContext);
@@ -45,7 +54,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [text, setText] = useState("");
   const [otherUserId, setOtherUserId] = useState<string | null>(null);
-
+  const [listing, setListing] = useState<Listing | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 
@@ -75,8 +84,16 @@ export default function ChatPage() {
         const res = await api.get("/chat/conversations");
 
         const conversation = res.data.conversations.find(
-          (c: Conversation) => c._id === conversationId,
-        );
+  (c: Conversation) => c._id === conversationId,
+);
+  
+if (!conversation) return;
+
+// 👇 SET LISTING HERE
+if (conversation.listingId) {
+  setListing(conversation.listingId);
+}
+
 
         if (!conversation) return;
 
@@ -299,11 +316,29 @@ useEffect(() => {
   return (
     <div className="h-screen flex flex-col bg-gray-50 ">
       {/* HEADER */}
-      <div className="bg-white shadow px-4 sm:px-6 py-3 flex items-center justify-between">
-  <h1 className="font-semibold text-black text-base sm:text-lg">Chat</h1>
+      <div className="sticky top-0 z-20 bg-white border-b px-3 md:px-4 py-2 md:py-3 flex items-center gap-3 shadow-sm">
+
+  {/* Product Image */}
+  {listing?.images?.[0] && (
+    <img
+      src={listing.images[0]}
+      className="w-12 h-12 rounded-xl object-cover border"
+    />
+  )}
+
+  {/* Info */}
+  <div className="flex flex-col">
+    <p className="font-semibold text-gray-800 text-sm sm:text-base">
+      {listing?.title || "Chat"}
+    </p>
+    <p className="text-xs text-gray-500">
+      Chat about this item
+    </p>
+  </div>
+
 </div>
       {/* MESSAGE LIST */}
-      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 sm:py-4 space-y-2">
+      <div className="flex-1 overflow-y-auto px-2 sm:px-4 py-3 sm:py-4 space-y-2 pb-24">
         {Object.entries(groupedMessages).map(([date, msgs]) => (
           <div key={date} className="relative">
             {/* Sticky date header */}
@@ -360,21 +395,27 @@ useEffect(() => {
       </div>
 
       {/* INPUT */}
-      <div className="bg-white border-t px-2 sm:px-4 py-2 sm:py-3 flex items-center gap-2">
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1 border rounded-full px-3 sm:px-4 py-2 outline-none text-black text-sm"
-          placeholder="Type a message..."
-        />
+      <div className="sticky bottom-0 bg-white border-t px-4 py-3 flex items-center gap-2 shadow-md">
+        <textarea
+  value={text}
+  onChange={(e) => setText(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  }}
+  rows={1}
+  placeholder="Type a message..."
+  className="flex-1 resize-none rounded-xl border border-gray-300 px-4 py-2 text-sm bg-gray-100 outline-none max-h-32 text-gray-900 placeholder:text-gray-400"
+/>
 
         <button
-          onClick={sendMessage}
-          className="bg-black text-white px-4 sm:px-6 py-2 rounded-full text-sm"
-        >
-          Send
-        </button>
+  onClick={sendMessage}
+  className="bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full transition flex items-center justify-center"
+>
+  <FiSend size={18} />
+</button>
       </div>
     </div>
   );

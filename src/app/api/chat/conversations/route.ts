@@ -13,7 +13,7 @@ Listing;
 
 export async function GET(req: Request) {
 
-  const auth = requireAuth(req); if (auth instanceof Response) return auth;
+  const auth = requireAuth(req); 
   if (auth instanceof Response) return auth;
 
   await dbConnect();
@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     participants: auth.id
   })
   .populate("participants", "name")
-  .populate("listingId", "title")
+  .populate("listingId", "title images")
   .lean();
 
   const result = await Promise.all(
