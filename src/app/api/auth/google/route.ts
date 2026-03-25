@@ -113,6 +113,7 @@ if (referralCode) {
         paidCoins: user.paidCoins,
         referralCode: user.referralCode,
         isAdmin: user.isAdmin,
+        avatar: user.avatar,
       },
     });
 

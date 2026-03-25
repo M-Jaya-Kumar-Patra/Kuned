@@ -212,10 +212,13 @@ export default function SignupContent() {
 
                   const { token, user } = res.data;
 
-                  localStorage.setItem("token", token);
-                  localStorage.setItem("user", JSON.stringify(user));
+// ✅ use AuthContext instead of manual localStorage
+auth?.login(user, token);
 
-                  router.push("/dashboard");
+// optional: ensure fresh sync
+await auth?.refreshUser();
+
+router.push("/dashboard");
                 } catch (err) {
                   alert("Google signup failed");
                 }
