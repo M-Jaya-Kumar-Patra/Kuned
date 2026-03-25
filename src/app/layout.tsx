@@ -24,24 +24,42 @@ export const metadata: Metadata = {
   title: "Kuned",
   description: "Buy, sell & discover great deals near you.",
 
+  metadataBase: new URL("https://kuned.vercel.app"), // ⚠️ IMPORTANT
+
+  openGraph: {
+    title: "Kuned",
+    description: "Buy, sell & discover great deals near you.",
+    url: "https://kuned.vercel.app",
+    siteName: "Kuned",
+    images: [
+      {
+        url: "/og-image.png", // must be in /public
+        width: 1200,
+        height: 630,
+        alt: "Kuned Marketplace",
+      },
+    ],
+    locale: "en_IN",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Kuned",
+    description: "Buy, sell & discover great deals near you.",
+    images: ["/og-image.png"],
+  },
+
   icons: {
     icon: [
       { url: "/favicon.ico" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
     other: [
-      {
-        rel: "icon",
-        url: "/android-chrome-192x192.png",
-      },
-      {
-        rel: "icon",
-        url: "/android-chrome-512x512.png",
-      },
+      { rel: "icon", url: "/android-chrome-192x192.png" },
+      { rel: "icon", url: "/android-chrome-512x512.png" },
     ],
   },
 };
