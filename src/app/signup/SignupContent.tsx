@@ -182,8 +182,10 @@ export default function SignupContent() {
               <input
   placeholder="Referral Code (optional)"
   value={form.referralCode}
-  disabled={!!form.referralCode}
-  className="w-full px-4 py-2 placeholder:text-gray-400 text-gray-900 rounded-lg border border-gray-200 bg-white/80 focus:outline-none disabled:bg-gray-100"
+  onChange={(e) =>
+    setForm({ ...form, referralCode: e.target.value })
+  }
+  className="w-full px-4 py-2 placeholder:text-gray-400 text-gray-900 rounded-lg border border-gray-200 bg-white/80 focus:outline-none"
 />
             </div>
 

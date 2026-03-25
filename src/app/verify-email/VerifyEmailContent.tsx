@@ -18,8 +18,8 @@ export default function VerifyEmailContent() {
 
 
   useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
+  if (auth?.user) {
+    router.push("/");
   }
 }, [auth?.user]);
 
