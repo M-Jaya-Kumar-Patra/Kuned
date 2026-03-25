@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     siteName: "Kuned",
     images: [
       {
-        url: "/og-image.png", // must be in /public
+        url: "/og-image.webp", // must be in /public
         width: 1200,
         height: 630,
         alt: "Kuned Marketplace",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Kuned",
     description: "Buy, sell & discover great deals near you.",
-    images: ["/og-image.png"],
+    images: ["/og-image.webp"],
   },
 
   icons: {
