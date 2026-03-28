@@ -2,10 +2,11 @@
 
 import { Suspense } from "react";
 import SignupContent from "./SignupContent";
+import Loader from "@/components/ui/Loader";
 
 export default function SignupPage() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<Loader/>}>
       <SignupContent />
     </Suspense>
   );

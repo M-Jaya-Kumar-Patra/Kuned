@@ -13,6 +13,8 @@ export async function POST(req: Request) {
     // ✅ STEP 3: now parse JSON (AFTER verification)
     const data = await req.json();
 
+    console.log("🔥 WEBHOOK HIT");
+
     const orderId = data?.data?.order?.order_id?.trim();
     const status = data?.data?.payment?.payment_status;
 

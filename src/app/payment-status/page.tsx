@@ -2,10 +2,11 @@
 
 import { Suspense } from "react";
 import PaymentStatusContent from "./PaymentStatusContent";
+import Loader from "@/components/ui/Loader";
 
 export default function PaymentStatusPage() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<Loader/>}>
       <PaymentStatusContent />
     </Suspense>
   );

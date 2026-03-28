@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import Loader from "@/components/ui/Loader";
 
 type User = {
   name: string;
@@ -123,7 +124,7 @@ export default function ProfilePage() {
     loadData();
   }, []);
 
-  if (!user) return <p className="p-10 text-center">Loading...</p>;
+  if (!user) return <Loader text="Loading Profile..." />;
 
   return (
     <div className="min-h-screen bg-[#e4e7f9] pb-10">

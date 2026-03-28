@@ -6,6 +6,7 @@ import { AuthContext } from "@/context/AuthContext";
 import Link from "next/link";
 import { FaPlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/ui/Loader";
 
 
 type Listing = {
@@ -164,7 +165,7 @@ const toggleSoldStatus = async (listing: Listing) => {
 };
 
   if (!auth) {
-    return <p>Loading...</p>;
+    return <Loader text="Loading Dashboard..." />;
   }
 
   return (

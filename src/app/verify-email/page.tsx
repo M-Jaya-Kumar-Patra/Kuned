@@ -2,10 +2,11 @@
 
 import { Suspense } from "react";
 import VerifyEmailContent from "./VerifyEmailContent";
+import Loader from "@/components/ui/Loader";
 
 export default function VerifyEmailPage() {
   return (
-    <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+    <Suspense fallback={<Loader/>}>
       <VerifyEmailContent />
     </Suspense>
   );
