@@ -5,6 +5,7 @@ import api from "@/services/api";
 
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import Loader from "@/components/ui/Loader";
 
 
 type CoinTransaction = {
@@ -71,7 +72,7 @@ export default function CoinHistoryPage() {
 }
 
   if (loading) {
-    return <p className="p-6">Loading coin history...</p>;
+    return <Loader  text="Loading Coin History..."/>;
   }
 
   return (

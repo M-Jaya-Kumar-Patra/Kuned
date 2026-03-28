@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import { AxiosError } from "axios";
+import Loader from "@/components/ui/Loader";
 
 
 type Report = {
@@ -108,7 +109,7 @@ const banUser = async (id?: string) => {
 
 };
 
-  if (loading) return <p className="p-6">Loading reports...</p>;
+  if (loading) return <Loader  text="Loading Reports..."/>;
 
   return (
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] px-4 py-8">
