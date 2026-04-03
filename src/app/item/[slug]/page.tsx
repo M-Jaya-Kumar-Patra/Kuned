@@ -39,7 +39,7 @@ export default async function ItemPage({
   if (!listing) return notFound();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff]">
+    <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] pb-8">
       <TrackView listingId={listing._id.toString()} />
 
       <div className="max-w-7xl mx-auto px-6 py-8">
