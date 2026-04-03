@@ -75,6 +75,7 @@ export default function ImageGallery({ images }: Props) {
               alt={`Thumbnail ${index + 1}`}
               fill
               sizes="80px"
+              priority
               className="object-cover"
             />
 
