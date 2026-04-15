@@ -62,12 +62,15 @@ export default function ProfilePage() {
   const auth = useContext(AuthContext);
 
   useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
+  if (!auth?.loading && !auth?.user) {
+    router.replace("/login"); // ✅ use replace (not push)
   }
-}, [auth?.user]);
+}, [auth?.loading, auth?.user]);
 
   useEffect(() => {
+      const token = localStorage.getItem("token");
+  if (!token) return; // ✅ STOP HERE
+
   const fetchStats = async () => {
     try {
       // Listings (already have API)
@@ -105,6 +108,9 @@ export default function ProfilePage() {
 }, []);
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+  if (!token) return; // ✅ ADD THIS
+
     const loadData = async () => {
       const userRes = await api.get("/user/me");
       setUser({

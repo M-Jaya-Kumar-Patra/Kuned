@@ -15,9 +15,10 @@ type User = {
 
 type AuthContextType = {
   user: User | null;
+  loading: boolean; // ✅ add this
   login: (userData: User, token: string) => void;
   logout: () => void;
-  refreshUser: () => Promise<void>; // ✅ important
+  refreshUser: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
@@ -35,30 +36,44 @@ export function AuthProvider({ children }: Props) {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  const [loading, setLoading] = useState(true);
+
   // 🔥 FETCH LATEST USER FROM BACKEND
   const refreshUser = async () => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-
-      const res = await fetch("/api/user/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (data?.user) {
-        setUser(data.user);
-
-        // ✅ sync localStorage
-        localStorage.setItem("user", JSON.stringify(data.user));
-      }
-    } catch (err) {
-      console.error("Refresh user failed", err);
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUser(null);
+      return;
     }
-  };
+
+    const res = await fetch("/api/user/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (res.status === 401) {
+      // ✅ token expired
+      logout();
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data?.user) {
+      setUser(data.user);
+      localStorage.setItem("user", JSON.stringify(data.user));
+    } else {
+      setUser(null);
+    }
+  } catch (err) {
+    console.error("Refresh user failed", err);
+    setUser(null);
+  } finally {
+    setLoading(false); // ✅ VERY IMPORTANT
+  }
+};
 
   // 🔥 AUTO REFRESH ON APP LOAD
   useEffect(() => {
@@ -95,7 +110,7 @@ export function AuthProvider({ children }: Props) {
 
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

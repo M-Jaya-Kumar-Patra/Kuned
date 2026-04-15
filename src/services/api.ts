@@ -5,7 +5,6 @@ const api = axios.create({
 });
 
 // ✅ GLOBAL FLAG
-let isRedirecting = false;
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
@@ -21,15 +20,17 @@ api.interceptors.response.use(
   (response) => response,
 
   (error) => {
-    if (error.response?.status === 401 && !isRedirecting) {
-      isRedirecting = true; // ✅ prevent multiple alerts
+    if (error.response?.status === 401) {
+  if (!sessionStorage.getItem("redirecting")) {
+    sessionStorage.setItem("redirecting", "true");
 
-      alert("Session expired. Please login again.");
+    alert("Session expired. Please login again.");
 
-      localStorage.removeItem("token");
+    localStorage.removeItem("token");
 
-      window.location.href = "/login";
-    }
+    window.location.href = "/login";
+  }
+}
 
     return Promise.reject(error);
   }

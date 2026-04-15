@@ -20,28 +20,22 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-
   if (!user) return;
 
+  const token = localStorage.getItem("token");
+  if (!token) return; // ✅ ADD THIS
+
   const fetchNotifications = async () => {
-
     try {
-
       const res = await api.get("/notifications");
-
       setNotifications(res.data.notifications ?? []);
-
     } catch (error) {
-
       console.error("Failed to fetch notifications", error);
-
     }
-
   };
 
   fetchNotifications();
-
-}, [user, pathname]);
+}, [user, pathname]); 
 
 useEffect(() => {
   function handleClickOutside(event: MouseEvent) {
