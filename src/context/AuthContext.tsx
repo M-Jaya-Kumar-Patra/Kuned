@@ -16,7 +16,7 @@ type User = {
 type AuthContextType = {
   user: User | null;
   loading: boolean; // ✅ add this
-  login: (userData: User, token: string) => void;
+  login: (userData: User) => void;
   logout: () => void;
   refreshUser: () => Promise<void>;
 };
@@ -28,52 +28,35 @@ type Props = {
 };
 
 export function AuthProvider({ children }: Props) {
-
-  const [user, setUser] = useState<User | null>(() => {
-    if (typeof window === "undefined") return null;
-
-    const storedUser = localStorage.getItem("user");
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   const [loading, setLoading] = useState(true);
 
   // 🔥 FETCH LATEST USER FROM BACKEND
   const refreshUser = async () => {
-  try {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    try {
+      const res = await fetch("/api/user/me", {
+        credentials: "include",
+      });
+
+      if (res.status === 401) {
+        setUser(null);
+        return;
+      }
+      const data = await res.json();
+
+      if (data?.user) {
+        setUser(data.user);
+      } else {
+        setUser(null);
+      }
+    } catch (err) {
+      console.error("Refresh user failed", err);
       setUser(null);
-      return;
+    } finally {
+      setLoading(false); // ✅ VERY IMPORTANT
     }
-
-    const res = await fetch("/api/user/me", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (res.status === 401) {
-      // ✅ token expired
-      logout();
-      return;
-    }
-
-    const data = await res.json();
-
-    if (data?.user) {
-      setUser(data.user);
-      localStorage.setItem("user", JSON.stringify(data.user));
-    } else {
-      setUser(null);
-    }
-  } catch (err) {
-    console.error("Refresh user failed", err);
-    setUser(null);
-  } finally {
-    setLoading(false); // ✅ VERY IMPORTANT
-  }
-};
+  };
 
   // 🔥 AUTO REFRESH ON APP LOAD
   useEffect(() => {
@@ -85,29 +68,29 @@ export function AuthProvider({ children }: Props) {
 
   // 🔥 SOCKET REGISTER
   useEffect(() => {
-  if (!user?._id) return;
+    if (!user?._id) return;
 
-  socket.connect();
-  socket.emit("registerUser", user._id);
+    socket.connect();
+    socket.emit("registerUser", user._id);
 
-  return () => {
-    socket.disconnect(); // ✅ cleanup function
-  };
-}, [user?._id]);
+    return () => {
+      socket.disconnect();
+    };
+  }, [user?._id]);
 
-  const login = (userData: User, token: string) => {
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("token", token);
+  const login = (userData: User) => {
     setUser(userData);
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+  const logout = async () => {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    });
+
     setUser(null);
     socket.disconnect();
   };
-
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>

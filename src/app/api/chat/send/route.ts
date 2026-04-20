@@ -16,7 +16,7 @@ User;
 
 export async function POST(req: Request) {
   try {
-    const auth = requireAuth(req); if (auth instanceof Response) return auth;
+    const auth = await requireAuth(); if (auth instanceof Response) return auth;
     if (auth instanceof Response) return auth;
 
     await dbConnect();

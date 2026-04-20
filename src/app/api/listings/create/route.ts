@@ -27,7 +27,7 @@ export async function POST(req: Request) {
 
   try {
 
-    const auth = requireAuth(req); 
+    const auth = await requireAuth(); 
     if (auth instanceof Response) return auth;
 
     const user = auth as { id: string };

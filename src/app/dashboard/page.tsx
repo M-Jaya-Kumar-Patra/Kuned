@@ -7,7 +7,7 @@ import Link from "next/link";
 import { FaPlus } from "react-icons/fa6";
 import { useRouter } from "next/navigation";
 import Loader from "@/components/ui/Loader";
-
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type Listing = {
   _id: string;
@@ -40,11 +40,7 @@ export default function DashboardPage() {
 
   const user = auth?.user;
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   useEffect(() => {
     if (!user) return;
@@ -165,10 +161,11 @@ const toggleSoldStatus = async (listing: Listing) => {
 };
 
   if (!auth) {
-    return <Loader text="Loading Dashboard..." />;
+    return <Loader/>;
   }
 
   return (
+    <ProtectedRoute>
   <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 py-6 sm:py-8 px-2 sm:px-4 flex justify-center">
     <div className="w-full max-w-full sm:max-w-5xl">
 
@@ -364,5 +361,6 @@ const toggleSoldStatus = async (listing: Listing) => {
 
     </div>
   </div>
+  </ProtectedRoute>
 );
 }

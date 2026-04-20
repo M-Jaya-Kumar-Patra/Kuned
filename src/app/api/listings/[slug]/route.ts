@@ -66,7 +66,7 @@ export async function DELETE(
   const { slug } = await params;
 
 
-  const auth = requireAuth(req); if (auth instanceof Response) return auth;
+  const auth = await requireAuth(); if (auth instanceof Response) return auth;
 
   const user = auth as { id: string };
 
@@ -102,7 +102,7 @@ export async function PUT(
 
   const { slug } = await params;
 
-  const auth = requireAuth(req); if (auth instanceof Response) return auth;
+  const auth = await requireAuth(); if (auth instanceof Response) return auth;
 
   const user = auth as { id: string };
 

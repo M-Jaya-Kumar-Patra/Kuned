@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { load } from "@cashfreepayments/cashfree-js";
 import Image from "next/image";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type CoinPackage = {
   id: string;
@@ -20,36 +21,21 @@ const packages: CoinPackage[] = [
 ];
 
 export default function BuyCoinsPage() {
-  const auth = useContext(AuthContext);
-  const router = useRouter();
-
+ 
 
   const [loading, setLoading] = useState<string | null>(null);
 
-
-  useEffect(() => {
-    if (!auth?.user) {
-      router.push("/login"); // redirect if not logged in
-    }
-  }, [auth?.user]);
-
-  // ⛔ prevent rendering before check
-  if (!auth?.user) {
-    return null; // or loader
-  }
-
   
+
   const handleBuy = async (pkg: CoinPackage) => {
     try {
       setLoading(pkg.id);
 
-      const token = localStorage.getItem("token");
-
       const res = await fetch("/api/payments/create-order", {
         method: "POST",
+        credentials: "include", // ✅ ADD THIS
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           packageId: pkg.id,
@@ -63,7 +49,6 @@ export default function BuyCoinsPage() {
         return;
       }
 
-
       // ✅ LOAD SDK (CORRECT WAY)
       const cashfree = await load({
         mode:
@@ -72,14 +57,10 @@ export default function BuyCoinsPage() {
             : "sandbox",
       });
 
-
       await cashfree.checkout({
         paymentSessionId: data.paymentSessionId,
         redirectTarget: "_self",
       });
-
-
-
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
@@ -89,138 +70,127 @@ export default function BuyCoinsPage() {
   };
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#f5f7ff] py-6 sm:py-10 px-3 sm:px-4">
-
-    <div className="max-w-6xl mx-auto">
-
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">
-          Buy Coins
-        </h1>
-        <p className="text-gray-600 mt-2 sm:mt-3 text-sm sm:text-base md:text-lg">
-          Boost your listings and sell faster 🚀
-        </p>
-        <p className="text-gray-400 mt-1">
-          Use coins to make your listings more visible
-        </p>
-      </div>
-
-      {/* Cards Container */}
-      <div className="bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg">
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-
-          {packages.map((pkg) => {
-            const isPopular = pkg.id === "popular";
-
-            return (
-              <div
-                key={pkg.id}
-                className={`relative rounded-2xl p-4 sm:p-6 text-center transition shadow-sm ${
-                  isPopular
-                    ? "bg-white border-2 border-indigo-400 sm:scale-105 shadow-lg"
-                    : "bg-white/80"
-                }`}
-              >
-
-                {/* Most Popular Badge */}
-                {isPopular && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-orange-400 text-white text-xs px-4 py-1 rounded-full shadow">
-                    Most Popular
-                  </div>
-                )}
-
-                {/* Coin Image */}
-                <div className="flex justify-center mb-4">
-                  <img
-                    src="/images/quickLinks/coins.png"
-                    alt="coins"
-                    className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
-                  />
-                </div>
-
-                {/* Coins */}
-                <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
-                  {pkg.coins} Coins
-                </h2>
-
-                {/* Divider */}
-                <div className="w-full h-[1px] bg-gray-200 my-3"></div>
-
-                {/* Price */}
-                <p className="text-2xl sm:text-3xl font-bold text-gray-800">
-                  ₹{pkg.price}
-                </p>
-
-                {/* Divider */}
-                <div className="w-full h-[1px] bg-gray-200 my-3"></div>
-
-                {/* Subtitle */}
-                <p className="text-sm text-gray-500">
-                  {pkg.id === "starter" && "Casual sellers"}
-                  {pkg.id === "popular" && "Best value"}
-                  {pkg.id === "pro" && "Power sellers"}
-                </p>
-
-                {/* Button */}
-                <button
-                  onClick={() => handleBuy(pkg)}
-                  disabled={loading === pkg.id}
-                  className="mt-5 w-full py-2 cursor-pointer rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-medium hover:opacity-90 transition disabled:opacity-50"
-                >
-                  {loading === pkg.id ? "Processing..." : "Buy Now"}
-                </button>
-
-                {/* Bottom text */}
-                <p className="text-xs text-gray-400 mt-2">
-                  {pkg.id === "starter" && "Casual sellers"}
-                  {pkg.id === "popular" && "Best value"}
-                  {pkg.id === "pro" && "Power sellers"}
-                </p>
-
-              </div>
-            );
-          })}
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-800">
+            Buy Coins
+          </h1>
+          <p className="text-gray-600 mt-2 sm:mt-3 text-sm sm:text-base md:text-lg">
+            Boost your listings and sell faster 🚀
+          </p>
+          <p className="text-gray-400 mt-1">
+            Use coins to make your listings more visible
+          </p>
         </div>
 
-        {/* Payment Section */}
-        <div className="mt-8 border-t pt-6 text-center">
+        {/* Cards Container */}
+        <div className="bg-white/70 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8 shadow-lg">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {packages.map((pkg) => {
+              const isPopular = pkg.id === "popular";
 
-          <p className="text-gray-700 font-medium flex items-center justify-center gap-2">
-  Secure payments powered by
-  <Image
-    src="https://cashfreelogo.cashfree.com/website/landings/homepage/cashfreeLogo.png"
-    alt="Cashfree"
-    width={100}
-    height={24}
-  />
-</p>
-<div className="flex flex-wrap justify-center gap-4 sm:gap-8 mt-4 text-xs sm:text-sm text-gray-600">
-            <span>🔒 Secure</span>
-            <span>⚡ Instant credit</span>
-            <span>💳 Multiple payment options</span>
+              return (
+                <div
+                  key={pkg.id}
+                  className={`relative rounded-2xl p-4 sm:p-6 text-center transition shadow-sm ${
+                    isPopular
+                      ? "bg-white border-2 border-indigo-400 sm:scale-105 shadow-lg"
+                      : "bg-white/80"
+                  }`}
+                >
+                  {/* Most Popular Badge */}
+                  {isPopular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-orange-400 text-white text-xs px-4 py-1 rounded-full shadow">
+                      Most Popular
+                    </div>
+                  )}
+
+                  {/* Coin Image */}
+                  <div className="flex justify-center mb-4">
+                    <img
+                      src="/images/quickLinks/coins.png"
+                      alt="coins"
+                      className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
+                    />
+                  </div>
+
+                  {/* Coins */}
+                  <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
+                    {pkg.coins} Coins
+                  </h2>
+
+                  {/* Divider */}
+                  <div className="w-full h-[1px] bg-gray-200 my-3"></div>
+
+                  {/* Price */}
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-800">
+                    ₹{pkg.price}
+                  </p>
+
+                  {/* Divider */}
+                  <div className="w-full h-[1px] bg-gray-200 my-3"></div>
+
+                  {/* Subtitle */}
+                  <p className="text-sm text-gray-500">
+                    {pkg.id === "starter" && "Casual sellers"}
+                    {pkg.id === "popular" && "Best value"}
+                    {pkg.id === "pro" && "Power sellers"}
+                  </p>
+
+                  {/* Button */}
+                  <button
+                    onClick={() => handleBuy(pkg)}
+                    disabled={loading === pkg.id}
+                    className="mt-5 w-full py-2 cursor-pointer rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-medium hover:opacity-90 transition disabled:opacity-50"
+                  >
+                    {loading === pkg.id ? "Processing..." : "Buy Now"}
+                  </button>
+
+                  {/* Bottom text */}
+                  <p className="text-xs text-gray-400 mt-2">
+                    {pkg.id === "starter" && "Casual sellers"}
+                    {pkg.id === "popular" && "Best value"}
+                    {pkg.id === "pro" && "Power sellers"}
+                  </p>
+                </div>
+              );
+            })}
           </div>
 
+          {/* Payment Section */}
+          <div className="mt-8 border-t pt-6 text-center">
+            <p className="text-gray-700 font-medium flex items-center justify-center gap-2">
+              Secure payments powered by
+              <Image
+                src="https://cashfreelogo.cashfree.com/website/landings/homepage/cashfreeLogo.png"
+                alt="Cashfree"
+                width={100}
+                height={24}
+              />
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mt-4 text-xs sm:text-sm text-gray-600">
+              <span>🔒 Secure</span>
+              <span>⚡ Instant credit</span>
+              <span>💳 Multiple payment options</span>
+            </div>
+          </div>
         </div>
 
-      </div>
+        {/* Usage Section */}
+        <div className="mt-6 sm:mt-8 bg-white/70 backdrop-blur-xl rounded-2xl p-4 sm:p-6 shadow">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Usage</h3>
 
-      {/* Usage Section */}
-      <div className="mt-6 sm:mt-8 bg-white/70 backdrop-blur-xl rounded-2xl p-4 sm:p-6 shadow">
-
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">
-          Usage
-        </h3>
-
-        <div className="space-y-2 text-gray-600">
-          <p>⭐ Top Listing → 5 coins</p>
-          <p>🚨 Urgent → 2 coins</p>
-          <p>🔥 Highlight → 3 coins</p>
+          <div className="space-y-2 text-gray-600">
+            <p>⭐ Top Listing → 5 coins</p>
+            <p>🚨 Urgent → 2 coins</p>
+            <p>🔥 Highlight → 3 coins</p>
+          </div>
         </div>
-
       </div>
-
     </div>
-  </div>
-);
+    </ProtectedRoute>
+  );
 }

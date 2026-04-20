@@ -6,7 +6,7 @@ import { requireAuth } from "@/lib/requireAuth";
 export async function GET(req: Request) {
   await dbConnect();
 
-  const auth = requireAuth(req); if (auth instanceof Response) return auth;
+  const auth = await requireAuth(); if (auth instanceof Response) return auth;
 
   if (auth instanceof NextResponse) {
     return auth;

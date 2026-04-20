@@ -6,6 +6,8 @@ import api from "@/services/api";
 import Navbar from "@/components/Navbar";
 
 import { AuthContext } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 
 export default function CreateListingPage() {
   const router = useRouter();
@@ -26,11 +28,7 @@ export default function CreateListingPage() {
 
   const [uploading, setUploading] = useState(false);
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -131,15 +129,9 @@ const removeSpec = (index: number) => {
 };
 
 
-if (!auth?.user) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-500">Checking authentication...</p>
-    </div>
-  );
-}
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-gradient-to-b from-[#f5f7ff] to-[#eef1ff]">
       {/* Top spacing */}
       <div className="max-w-6xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
@@ -379,5 +371,6 @@ if (!auth?.user) {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

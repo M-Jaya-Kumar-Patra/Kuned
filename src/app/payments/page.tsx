@@ -1,8 +1,9 @@
 "use client";
 
-import { AuthContext } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+
+import { useEffect, useState } from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 
 type Payment = {
   _id: string;
@@ -14,25 +15,17 @@ type Payment = {
 };
 
 export default function PaymentHistoryPage() {
-  const auth = useContext(AuthContext);
-const router = useRouter();
+  
   const [payments, setPayments] = useState<Payment[]>([]);
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   useEffect(() => {
     const fetchPayments = async () => {
-      const token = localStorage.getItem("token");
 
       const res = await fetch("/api/payments/history", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  credentials: "include", // ✅ ADD THIS
+});
 
       const data = await res.json();
       setPayments(data.payments || []);
@@ -42,6 +35,7 @@ const router = useRouter();
   }, []);
 
   return (
+    <ProtectedRoute>
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] px-4 py-8">
 
     <div className="max-w-5xl mx-auto">
@@ -194,5 +188,6 @@ const router = useRouter();
 
     </div>
   </div>
+  </ProtectedRoute>
 );
 }

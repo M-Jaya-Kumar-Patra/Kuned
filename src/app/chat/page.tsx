@@ -5,6 +5,7 @@ import api from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter, usePathname } from "next/navigation";
 import { socket } from "@/lib/socketClient";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type User = {
   _id: string;
@@ -35,13 +36,6 @@ export default function ChatPage() {
   const pathname = usePathname();
 
   const userId = auth?.user?._id;
-
-
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
 
 
   const fetchChats = async () => {
@@ -167,6 +161,9 @@ const formatTime = (dateString: string) => {
 };
 
   return (
+    <ProtectedRoute>
+
+    
   <div className="min-h-screen flex justify-center items-start pt-4 sm:pt-6 px-2 sm:px-4 bg-gradient-to-br from-purple-50 to-blue-50">
     {/* Main Chat Container */}
     <div className="w-full max-w-full sm:max-w-2xl bg-white/60 backdrop-blur-xl rounded-2xl sm:rounded-3xl p-3 sm:p-5 shadow-xl">
@@ -270,5 +267,6 @@ const formatTime = (dateString: string) => {
 </div>
     </div>
   </div>
+  </ProtectedRoute>
 );
 }

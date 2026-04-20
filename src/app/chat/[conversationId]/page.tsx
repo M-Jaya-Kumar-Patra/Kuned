@@ -7,7 +7,7 @@ import { socket } from "@/lib/socketClient";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import { FiSend } from "react-icons/fi";
-
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type Participant = {
   _id: string;
@@ -42,7 +42,6 @@ type Listing = {
 export default function ChatPage() {
   const params = useParams();
   const auth = useContext(AuthContext);
-  const router = useRouter();
 
 
 
@@ -58,11 +57,7 @@ export default function ChatPage() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   // Auto scroll
   useEffect(() => {
@@ -314,6 +309,7 @@ useEffect(() => {
   );
 
   return (
+    <ProtectedRoute>
     <div className="h-screen flex flex-col bg-gray-50 ">
       {/* HEADER */}
       <div className="sticky top-0 z-20 bg-white border-b px-3 md:px-4 py-2 md:py-3 flex items-center gap-3 shadow-sm">
@@ -418,5 +414,6 @@ useEffect(() => {
 </button>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

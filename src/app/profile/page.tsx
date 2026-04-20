@@ -1,12 +1,12 @@
 "use client";
 
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import api from "@/services/api";
 import Link from "next/link";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { useRouter } from "next/navigation";
-import { AuthContext } from "@/context/AuthContext";
 import Loader from "@/components/ui/Loader";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type User = {
   name: string;
@@ -17,7 +17,7 @@ type User = {
   referralCode: string;
   banned: boolean;
   referrals: number;
-  referralCoins: number; 
+  referralCoins: number;
 };
 
 type Stats = {
@@ -51,73 +51,60 @@ export default function ProfilePage() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [stats, setStats] = useState({
-  listings: 0,
-  chats: 0,
-  views: 0,
-  messages: 0,
-});
-
+    listings: 0,
+    chats: 0,
+    views: 0,
+    messages: 0,
+  });
 
   const router = useRouter();
-  const auth = useContext(AuthContext);
+
+  
+  useEffect(() => {
+
+    const fetchStats = async () => {
+      try {
+        // Listings (already have API)
+        const profileRes = await api.get("/profile");
+        const listings = profileRes.data.listings || [];
+
+        // Chats
+        const chatRes = await api.get("/chat/conversations");
+        const conversations = chatRes.data.conversations || [];
+
+        // 🔥 CALCULATIONS
+        const totalViews = listings.reduce(
+          (sum: number, l: Listing) => sum + (l.views || 0),
+          0,
+        );
+
+        const totalMessages = conversations.reduce(
+          (sum: number, c: Conversation) => sum + (c.unseenCount || 0),
+          0,
+        );
+
+        setStats({
+          listings: listings.length,
+          chats: conversations.length,
+          views: totalViews,
+          messages: totalMessages,
+        });
+      } catch (err) {
+        console.error("Stats fetch failed", err);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   useEffect(() => {
-  if (!auth?.loading && !auth?.user) {
-    router.replace("/login"); // ✅ use replace (not push)
-  }
-}, [auth?.loading, auth?.user]);
-
-  useEffect(() => {
-      const token = localStorage.getItem("token");
-  if (!token) return; // ✅ STOP HERE
-
-  const fetchStats = async () => {
-    try {
-      // Listings (already have API)
-      const profileRes = await api.get("/profile");
-      const listings = profileRes.data.listings || [];
-
-      // Chats
-      const chatRes = await api.get("/chat/conversations");
-      const conversations = chatRes.data.conversations || [];
-
-      // 🔥 CALCULATIONS
-      const totalViews = listings.reduce(
-        (sum: number, l: Listing) => sum + (l.views || 0),
-        0
-      );
-
-      const totalMessages = conversations.reduce(
-        (sum: number, c: Conversation) => sum + (c.unseenCount || 0),
-        0
-      );
-
-      setStats({
-        listings: listings.length,
-        chats: conversations.length,
-        views: totalViews,
-        messages: totalMessages,
-      });
-
-    } catch (err) {
-      console.error("Stats fetch failed", err);
-    }
-  };
-
-  fetchStats();
-}, []);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-  if (!token) return; // ✅ ADD THIS
-
     const loadData = async () => {
       const userRes = await api.get("/user/me");
       setUser({
-  ...userRes.data.user,
-  referrals: userRes.data.referrals,
-  referralCoins: userRes.data.referralCoins,
-});
+        ...userRes.data.user,
+        referrals: userRes.data.referrals,
+        referralCoins: userRes.data.referralCoins,
+      });
 
       const statsRes = await api.get("/user/stats");
       setStats(statsRes.data);
@@ -130,103 +117,102 @@ export default function ProfilePage() {
     loadData();
   }, []);
 
-  if (!user) return <Loader text="Loading Profile..." />;
+  if (!user) return <Loader />;
 
-  return (
+return (
+  <ProtectedRoute>
     <div className="min-h-screen bg-[#e4e7f9] pb-10">
-     {/* ===== PROFILE HEADER ===== */}
-<div
-  className="relative w-full min-h-[220px] px-4 sm:px-6 py-6 flex items-center overflow-hidden"
-  style={{
-    backgroundImage: "url('/images/profile_bg.png')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
-  }}
->
-  {/* Overlay */}
-  <div className="absolute inset-0 backdrop-blur-[1px]"></div>
+      {/* ===== PROFILE HEADER ===== */}
+      <div
+        className="relative w-full min-h-[220px] px-4 sm:px-6 py-6 flex items-center overflow-hidden"
+        style={{
+          backgroundImage: "url('/images/profile_bg.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        {/* Overlay */}
+        <div className="absolute inset-0 backdrop-blur-[1px]"></div>
 
-  <div className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center sm:justify-between gap-6">
-    
-    {/* LEFT SECTION */}
-    <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-      
-      {/* AVATAR */}
-      <div className="relative group">
-        <img
-          src={user?.avatar || "/images/default-avatar.png"}
-          className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full border-4 border-white shadow object-cover"
-        />
+        <div className="w-full max-w-6xl mx-auto flex flex-col sm:flex-row items-center sm:justify-between gap-6">
+          {/* LEFT SECTION */}
+          <div className="relative z-10 flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            {/* AVATAR */}
+            <div className="relative group">
+              <img
+                src={user?.avatar || "/images/default-avatar.png"}
+                className="w-24 h-24 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-full border-4 border-white shadow object-cover"
+              />
 
-        {/* Upload Button */}
-        <label className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-black/60 text-white text-xs px-2 py-1 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition">
-          Change
-          <input
-            type="file"
-            className="hidden"
-            onChange={async (e) => {
-              const file = e.target.files?.[0];
-              if (!file) return;
+              {/* Upload Button */}
+              <label className="absolute bottom-1 right-1 sm:bottom-2 sm:right-2 bg-black/60 text-white text-xs px-2 py-1 rounded cursor-pointer opacity-0 group-hover:opacity-100 transition">
+                Change
+                <input
+                  type="file"
+                  className="hidden"
+                  onChange={async (e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
 
-              const formData = new FormData();
-              formData.append("avatar", file);
+                    const formData = new FormData();
+                    formData.append("avatar", file);
 
-              const res = await api.put("/user/update-avatar", formData);
-              setUser(res.data);
-            }}
-          />
-        </label>
-      </div>
+                    const res = await api.put("/user/update-avatar", formData);
+                    setUser(res.data);
+                  }}
+                />
+              </label>
+            </div>
 
-      {/* USER INFO */}
-      <div>
-        {/* NAME EDIT */}
-        {editing ? (
-          <div className="flex flex-col sm:flex-row gap-2 items-center">
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="px-2 py-1 rounded border text-base sm:text-lg text-gray-900 w-full sm:w-auto"
-            />
-            <button
-              onClick={async () => {
-                const res = await api.put("/user/update", { name });
-                setUser(res.data);
-                setEditing(false);
-              }}
-              className="bg-black text-white px-3 py-1 rounded text-sm w-full sm:w-auto"
-            >
-              Save
-            </button>
+            {/* USER INFO */}
+            <div>
+              {/* NAME EDIT */}
+              {editing ? (
+                <div className="flex flex-col sm:flex-row gap-2 items-center">
+                  <input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="px-2 py-1 rounded border text-base sm:text-lg text-gray-900 w-full sm:w-auto"
+                  />
+                  <button
+                    onClick={async () => {
+                      const res = await api.put("/user/update", { name });
+                      setUser(res.data);
+                      setEditing(false);
+                    }}
+                    className="bg-black text-white px-3 py-1 rounded text-sm w-full sm:w-auto"
+                  >
+                    Save
+                  </button>
+                </div>
+              ) : (
+                <h2
+                  className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 cursor-pointer"
+                  onClick={() => setEditing(true)}
+                >
+                  {user.name}
+                </h2>
+              )}
+
+              <p className="text-sm sm:text-base text-gray-600 break-all">
+                {user.email}
+              </p>
+
+              <p className="text-sm sm:text-base mt-1 text-black">
+                🪙 {user.bonusCoins + user.paidCoins} coins
+              </p>
+            </div>
           </div>
-        ) : (
-          <h2
-            className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-800 cursor-pointer"
+
+          {/* EDIT BUTTON */}
+          <button
             onClick={() => setEditing(true)}
+            className="relative z-10 bg-white/80 backdrop-blur-md text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-white transition w-full sm:w-auto"
           >
-            {user.name}
-          </h2>
-        )}
-
-        <p className="text-sm sm:text-base text-gray-600 break-all">
-          {user.email}
-        </p>
-
-        <p className="text-sm sm:text-base mt-1 text-black">
-          🪙 {user.bonusCoins + user.paidCoins} coins
-        </p>
+            ✏️ Edit Profile
+          </button>
+        </div>
       </div>
-    </div>
-
-    {/* EDIT BUTTON */}
-    <button
-      onClick={() => setEditing(true)}
-      className="relative z-10 bg-white/80 backdrop-blur-md text-gray-800 px-4 py-2 rounded-lg shadow hover:bg-white transition w-full sm:w-auto"
-    >
-      ✏️ Edit Profile
-    </button>
-  </div>
-</div>
 
       <div className="max-w-6xl mx-auto mt-6 px-4 space-y-6">
         {/* ===== WALLET ===== */}
@@ -324,30 +310,30 @@ export default function ProfilePage() {
           <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
             {[
               {
-      name: "Buy Coins",
-      img: "/images/quickLinks/coins.png",
-      path: "/buy-coins",
-    },
-    {
-      name: "Saved Listings",
-      img: "/images/quickLinks/heart.png",
-      path: "/saved",
-    },
-    {
-      name: "My Listings",
-      img: "/images/quickLinks/bar-chart.png",
-      path: "/dashboard",
-    },
-    {
-      name: "Payment History",
-      img: "/images/quickLinks/credit-card.png",
-      path: "/payments",
-    },
-    {
-      name: "Coin History",
-      img: "/images/quickLinks/refresh.png",
-      path: "/coins",
-    },
+                name: "Buy Coins",
+                img: "/images/quickLinks/coins.png",
+                path: "/buy-coins",
+              },
+              {
+                name: "Saved Listings",
+                img: "/images/quickLinks/heart.png",
+                path: "/saved",
+              },
+              {
+                name: "My Listings",
+                img: "/images/quickLinks/bar-chart.png",
+                path: "/dashboard",
+              },
+              {
+                name: "Payment History",
+                img: "/images/quickLinks/credit-card.png",
+                path: "/payments",
+              },
+              {
+                name: "Coin History",
+                img: "/images/quickLinks/refresh.png",
+                path: "/coins",
+              },
             ].map((item, i) => (
               <div
                 key={i}
@@ -398,27 +384,27 @@ export default function ProfilePage() {
             {/* CARDS */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {[
-  {
-    label: "Listings",
-    value: stats.listings,
-    img: "/images/activity/bar-chart.png",
-  },
-  {
-    label: "Chats",
-    value: stats.chats,
-    img: "/images/activity/chat.png",
-  },
-  {
-    label: "Views",
-    value: stats.views,
-    img: "/images/activity/view.png",
-  },
-  {
-    label: "Messages",
-    value: stats.messages,
-    img: "/images/activity/notification-bell.png",
-  },
-].map((item, i) => (
+                {
+                  label: "Listings",
+                  value: stats.listings,
+                  img: "/images/activity/bar-chart.png",
+                },
+                {
+                  label: "Chats",
+                  value: stats.chats,
+                  img: "/images/activity/chat.png",
+                },
+                {
+                  label: "Views",
+                  value: stats.views,
+                  img: "/images/activity/view.png",
+                },
+                {
+                  label: "Messages",
+                  value: stats.messages,
+                  img: "/images/activity/notification-bell.png",
+                },
+              ].map((item, i) => (
                 <div
                   key={i}
                   className="
@@ -471,7 +457,7 @@ export default function ProfilePage() {
             {listings.slice(0, 3).map((item) => (
               <div
                 key={item._id}
-                onClick={()=>router.push(`/item/${item?.slug}`)}
+                onClick={() => router.push(`/item/${item?.slug}`)}
                 className="
           bg-white
           rounded-xl
@@ -541,7 +527,8 @@ export default function ProfilePage() {
               </span>
               <span>|</span>
               <span>
-                Coins Earned <b className="text-gray-700">{user.referralCoins || 0}</b>
+                Coins Earned{" "}
+                <b className="text-gray-700">{user.referralCoins || 0}</b>
               </span>
             </div>
           </div>
@@ -604,7 +591,8 @@ export default function ProfilePage() {
             </span>
             <span>|</span>
             <span>
-              Coins Earned <b className="text-gray-700">{user.referralCoins || 0}</b>
+              Coins Earned{" "}
+              <b className="text-gray-700">{user.referralCoins || 0}</b>
             </span>
           </div>
         </div>
@@ -651,5 +639,6 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

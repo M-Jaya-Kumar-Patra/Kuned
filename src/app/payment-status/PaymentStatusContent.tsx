@@ -3,6 +3,7 @@
 import { useContext, useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 export default function PaymentStatusContent() {
   const searchParams = useSearchParams();
@@ -11,11 +12,7 @@ export default function PaymentStatusContent() {
 
   const [status, setStatus] = useState("loading");
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   useEffect(() => {
   const orderId = searchParams.get("orderId");
@@ -45,6 +42,7 @@ export default function PaymentStatusContent() {
 
 
 return (
+  <ProtectedRoute>
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] flex flex-col items-center justify-center px-4">
 
 
@@ -159,5 +157,6 @@ return (
     </div>
 
   </div>
+  </ProtectedRoute>
 );
 }

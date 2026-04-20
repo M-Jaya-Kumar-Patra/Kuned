@@ -6,7 +6,7 @@ import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
 import Loader from "@/components/ui/Loader";
-
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type CoinTransaction = {
   _id: string;
@@ -28,11 +28,7 @@ export default function CoinHistoryPage() {
   const [loading, setLoading] = useState(true);
 
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
 
   useEffect(() => {
@@ -63,19 +59,11 @@ export default function CoinHistoryPage() {
 
   }, []);
 
-  if (!auth?.user) {
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <p className="text-gray-500">Checking authentication...</p>
-    </div>
-  );
-}
+  
 
-  if (loading) {
-    return <Loader  text="Loading Coin History..."/>;
-  }
 
   return (
+    <ProtectedRoute>
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] px-4 py-8">
 
     <div className="max-w-4xl mx-auto">
@@ -192,5 +180,7 @@ export default function CoinHistoryPage() {
 
 
   </div>
+  </ProtectedRoute>
+  
 );
 }

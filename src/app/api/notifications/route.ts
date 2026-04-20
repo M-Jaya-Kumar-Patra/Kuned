@@ -5,7 +5,7 @@ import { dbConnect } from "@/lib/dbConnect";
 
 export async function GET(req: Request) {
 
-  const auth = requireAuth(req); if (auth instanceof Response) return auth;
+  const auth = await requireAuth(); if (auth instanceof Response) return auth;
 
   await dbConnect();
 

@@ -5,6 +5,7 @@ import api from "@/services/api";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 type Listing = {
   _id: string;
@@ -35,11 +36,7 @@ const router = useRouter();
   const [listings, setListings] = useState<Listing[]>([]);
 
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
 
   useEffect(() => {
@@ -62,6 +59,7 @@ const router = useRouter();
   if (!seller) return <p className="p-10 text-center">Loading seller...</p>;
 
   return (
+    <ProtectedRoute>
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] px-4 py-8">
 
     <div className="max-w-6xl mx-auto">
@@ -209,5 +207,6 @@ const router = useRouter();
 
     </div>
   </div>
+  </ProtectedRoute>
 );
 }

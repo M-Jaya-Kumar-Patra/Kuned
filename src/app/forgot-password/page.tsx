@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
 
   useEffect(() => {
   if (!auth?.user) {
-    router.push("/login");
+    router.push("/");
   }
 }, [auth?.user]);
 

@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 const reasons = [
   { key: "spam", label: "Spam", icon: "🚫" },
@@ -26,11 +27,7 @@ export default function ReportContent() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   const submitReport = async () => {
     if (!listingId) return alert("Invalid listing");
@@ -56,6 +53,7 @@ export default function ReportContent() {
   };
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] flex items-center justify-center px-4">
 
       {/* CARD */}
@@ -144,5 +142,6 @@ export default function ReportContent() {
 
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

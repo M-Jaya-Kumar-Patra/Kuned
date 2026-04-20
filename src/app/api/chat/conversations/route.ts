@@ -13,7 +13,7 @@ Listing;
 
 export async function GET(req: Request) {
 
-  const auth = requireAuth(req); 
+  const auth = await requireAuth(); 
   if (auth instanceof Response) return auth;
 
   await dbConnect();

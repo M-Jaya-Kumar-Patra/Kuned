@@ -109,7 +109,7 @@ const banUser = async (id?: string) => {
 
 };
 
-  if (loading) return <Loader  text="Loading Reports..."/>;
+  if (loading) return <Loader/>;
 
   return (
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] px-4 py-8">

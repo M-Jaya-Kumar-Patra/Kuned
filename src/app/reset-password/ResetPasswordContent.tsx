@@ -18,7 +18,7 @@ export default function ResetPasswordContent() {
 
   useEffect(() => {
   if (!auth?.user) {
-    router.push("/login");
+    router.push("/");
   }
 }, [auth?.user]);
 

@@ -7,7 +7,7 @@ export async function GET(req: Request) {
   try {
     await dbConnect();
 
-    const auth = requireAuth(req);
+    const auth = await requireAuth();
     if (auth instanceof Response) return auth;
 
     if (auth instanceof NextResponse) return auth;

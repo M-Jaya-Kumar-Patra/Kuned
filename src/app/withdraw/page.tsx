@@ -3,6 +3,9 @@
 import { AuthContext } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
+
 
 export default function WithdrawPage() {
 
@@ -25,21 +28,14 @@ const fee = (amountNum * 1.6) / 100;
 const finalAmount = amountNum - fee;
 
 
-useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+
 
   useEffect(() => {
     const fetchUser = async () => {
-      const token = localStorage.getItem("token");
 
       const res = await fetch("/api/user/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+  credentials: "include",
+});
 
       const data = await res.json();
       setPaidCoins(data.user.paidCoins || 0);
@@ -61,19 +57,18 @@ useEffect(() => {
       return;
     }
 
-    const token = localStorage.getItem("token");
-
     const res = await fetch("/api/withdraw", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        ...form,
-        amount: amountNum,
-      }),
-    });
+  method: "POST",
+  credentials: "include", // ✅ ADD
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    ...form,
+    amount: amountNum,
+  }),
+});
+
 
     const data = await res.json();
 
@@ -85,6 +80,7 @@ useEffect(() => {
   };
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] flex items-center justify-center px-4">
 
       <div className="w-full max-w-lg bg-white/70 backdrop-blur-xl rounded-3xl p-8 shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
@@ -175,5 +171,6 @@ useEffect(() => {
 
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

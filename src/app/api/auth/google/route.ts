@@ -102,20 +102,29 @@ if (referralCode) {
       console.error("Email failed but login continues:", err);
     }
 
-    return NextResponse.json({
-      message: "Google login successful",
-      token,
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        bonusCoins: user.bonusCoins,
-        paidCoins: user.paidCoins,
-        referralCode: user.referralCode,
-        isAdmin: user.isAdmin,
-        avatar: user.avatar,
-      },
-    });
+    const response = NextResponse.json({
+  message: "Google login successful",
+  user: {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    bonusCoins: user.bonusCoins,
+    paidCoins: user.paidCoins,
+    referralCode: user.referralCode,
+    isAdmin: user.isAdmin,
+    avatar: user.avatar,
+  },
+});
+
+// 🔥 SET COOKIE HERE
+response.cookies.set("token", token, {
+  httpOnly: true,
+  secure: false,        // ❗ MUST be false on localhost
+  sameSite: "lax",      // ❗ IMPORTANT
+  path: "/",
+});
+
+return response;
 
   } catch (error) {
     console.log("🔥 GOOGLE ERROR:", error);

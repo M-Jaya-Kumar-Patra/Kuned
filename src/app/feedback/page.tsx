@@ -4,18 +4,15 @@ import { useContext, useEffect, useState } from "react";
 import api from "@/services/api";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/context/AuthContext";
+import ProtectedRoute from "@/components/ProtectedRoute";
+
 
 export default function FeedbackPage() {
-  const auth = useContext(AuthContext);
   const router = useRouter();
   const [message, setMessage] = useState("");
   const [type, setType] = useState("bug");
 
-  useEffect(() => {
-  if (!auth?.user) {
-    router.push("/login");
-  }
-}, [auth?.user]);
+  
 
   const handleSubmit = async () => {
   if (!message.trim()) return alert("Please enter your feedback");
@@ -29,6 +26,7 @@ export default function FeedbackPage() {
 };
 
   return (
+    <ProtectedRoute>
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-[#f5f7ff] to-[#eef1ff] px-4">
       <div className="bg-white/70 backdrop-blur-xl p-6 rounded-2xl shadow-md w-full max-w-md">
 
@@ -61,5 +59,6 @@ export default function FeedbackPage() {
 
       </div>
     </div>
+    </ProtectedRoute>
   );
 }

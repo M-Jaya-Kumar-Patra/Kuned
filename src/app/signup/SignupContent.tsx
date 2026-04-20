@@ -7,6 +7,7 @@ import { GoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useContext, useEffect } from "react";
 import { AuthContext } from "@/context/AuthContext";
+import Loader from "@/components/ui/Loader";
 
 export default function SignupContent() {
   const router = useRouter();
@@ -36,36 +37,37 @@ export default function SignupContent() {
 });
 
   const [strength, setStrength] = useState("");
-
-  useEffect(() => {
-    if (auth?.user) {
-      router.push("/"); // or "/dashboard"
-    }
-  }, [auth?.user]);
+const [loading, setLoading] = useState(false);
+const [googleLoading, setGoogleLoading] = useState(false);
 
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
-      await api.post("/auth/signup", {
-        ...form,
-        sourceWebsite: source || "direct",
-      });
+  try {
+    setLoading(true);
 
-      localStorage.removeItem("referralCode");
+    await api.post("/auth/signup", {
+      ...form,
+      sourceWebsite: source || "direct",
+    });
 
-      router.push(`/verify-email?email=${form.email}`);
-    } catch (err) {
-      if (axios.isAxiosError(err)) {
-        console.log("Error:", err.response?.data);
-      } else {
-        console.log("Unexpected Error:", err);
-      }
+    localStorage.removeItem("referralCode");
 
-      alert("Signup failed");
+    router.push(`/verify-email?email=${form.email}`);
+  } catch (err) {
+    if (axios.isAxiosError(err)) {
+      console.log("Error:", err.response?.data);
+    } else {
+      console.log("Unexpected Error:", err);
     }
-  };
+
+    alert("Signup failed");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const checkPasswordStrength = (password: string) => {
     let score = 0;
@@ -81,7 +83,7 @@ export default function SignupContent() {
     return "Strong";
   };
   if (auth?.user) {
-  return null; // or loader
+  return <Loader/>; // or loader
 }
 
   return (
@@ -190,9 +192,18 @@ export default function SignupContent() {
             </div>
 
             {/* Submit */}
-            <button className="w-full py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-medium hover:opacity-90 transition">
-              Create Account
-            </button>
+            <button
+  disabled={loading}
+  className={`w-full py-2 rounded-lg text-white font-medium flex items-center justify-center transition
+    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-500 to-blue-500 hover:opacity-90"}
+  `}
+>
+  {loading ? (
+    <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+  ) : (
+    "Create Account"
+  )}
+</button>
           </form>
 
           {/* Divider */}
@@ -203,33 +214,39 @@ export default function SignupContent() {
           </div>
 
           {/* Google Signup */}
-          <div className=" px-4 py-2 flex justify-center hover:bg-gray-50 transition">
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                try {
-                  const res = await api.post("/auth/google", {
-                    credential: credentialResponse.credential,
-                    referralCode: form.referralCode,
-                  });
+          <div className="relative flex justify-center px-4 py-2 hover:bg-gray-50 transition">
 
-                  const { token, user } = res.data;
+  {googleLoading && (
+    <div className="absolute inset-0 flex items-center justify-center bg-white/60 rounded-lg z-10">
+      <span className="w-6 h-6 border-2 border-black border-t-transparent rounded-full animate-spin"></span>
+    </div>
+  )}
 
-// ✅ use AuthContext instead of manual localStorage
-auth?.login(user, token);
+  <GoogleLogin
+    onSuccess={async (credentialResponse) => {
+      try {
+        setGoogleLoading(true);
 
-// optional: ensure fresh sync
-await auth?.refreshUser();
+        const res = await api.post("/auth/google", {
+          credential: credentialResponse.credential,
+          referralCode: form.referralCode,
+        });
 
-router.push("/dashboard");
-                } catch (err) {
-                  alert("Google signup failed");
-                }
-              }}
-              onError={() => {
-                alert("Google Signup Failed");
-              }}
-            />
-          </div>
+        const { user } = res.data;
+
+        auth?.login(user);
+        router.push("/dashboard");
+      } catch (err) {
+        alert("Google signup failed");
+      } finally {
+        setGoogleLoading(false);
+      }
+    }}
+    onError={() => {
+      alert("Google Signup Failed");
+    }}
+  />
+</div>
 
           {/* Bottom */}
           <p className="text-center text-sm text-gray-500 mt-6">

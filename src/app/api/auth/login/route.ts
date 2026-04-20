@@ -85,20 +85,28 @@ export async function POST(req: Request) {
       console.error("Email failed but login continues:", err);
     }
 
-    // ✅ Success response
-    return NextResponse.json({
-      message: "Login successful",
-      token,
-      user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        bonusCoins: user.bonusCoins,
-        paidCoins: user.paidCoins,
-        referralCode: user.referralCode,
-        isAdmin: user.isAdmin,
-      },
-    });
+    const response = NextResponse.json({
+  message: "Login successful",
+  user: {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    bonusCoins: user.bonusCoins,
+    paidCoins: user.paidCoins,
+    referralCode: user.referralCode,
+    isAdmin: user.isAdmin,
+  },
+});
+
+// 🔥 SET COOKIE HERE
+response.cookies.set("token", token, {
+  httpOnly: true,
+  secure: false,        // ❗ VERY IMPORTANT (localhost)
+  sameSite: "lax",      // ❗ IMPORTANT
+  path: "/",
+});
+
+return response;
 
   } catch (error) {
     console.error("Login error:", error);

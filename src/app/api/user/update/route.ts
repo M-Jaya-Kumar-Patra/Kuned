@@ -7,7 +7,7 @@ export async function PUT(req: Request) {
   try {
     await dbConnect();
 
-    const auth = requireAuth(req);
+    const auth = await requireAuth();
     if (auth instanceof Response) return auth;
 
     const body = await req.json();

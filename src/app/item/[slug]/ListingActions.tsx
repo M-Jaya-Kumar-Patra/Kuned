@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import ChatButton from "@/components/ChatButton";
 import Link from "next/link";
+import Loader from "@/components/ui/Loader";
 
 type Props = {
   listingId: string;
@@ -14,7 +15,7 @@ export default function ListingActions({ listingId, sellerId }: Props) {
 
   const auth = useContext(AuthContext);
 
-  if (!auth) return null;
+  if (!auth) return <Loader/>;
 
   const { user } = auth;
 

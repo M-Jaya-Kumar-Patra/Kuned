@@ -1,5 +1,6 @@
 import { verifyToken } from "./jwt";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 type AuthUser = {
   id: string;
@@ -7,21 +8,22 @@ type AuthUser = {
   phone?: number;
 };
 
-export function requireAuth(req: Request): AuthUser | NextResponse {
+export async function requireAuth(): Promise<AuthUser | NextResponse> {
 
-  const authHeader = req.headers.get("authorization");
+  // 🔥 FIXED
+  const cookieStore = await cookies();
+  const token = cookieStore.get("token")?.value;
 
-  if (!authHeader) {
+  console.log("AUTH TOKEN:", token);
+
+  if (!token) {
     return NextResponse.json(
       { message: "Unauthorized" },
       { status: 401 }
     );
   }
 
-  const token = authHeader.split(" ")[1];
-
   try {
-
     const decoded = verifyToken(token) as AuthUser | null;
 
     if (!decoded) {
@@ -34,11 +36,9 @@ export function requireAuth(req: Request): AuthUser | NextResponse {
     return decoded;
 
   } catch (error) {
-
     return NextResponse.json(
       { message: "Token expired" },
       { status: 401 }
     );
-
   }
 }

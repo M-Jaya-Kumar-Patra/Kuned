@@ -20,10 +20,8 @@ export default function NotificationBell() {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-  if (!user) return;
+  if (!auth?.loading && !user) return;
 
-  const token = localStorage.getItem("token");
-  if (!token) return; // ✅ ADD THIS
 
   const fetchNotifications = async () => {
     try {

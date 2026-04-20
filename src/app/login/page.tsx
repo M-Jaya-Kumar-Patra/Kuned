@@ -1,60 +1,54 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/services/api";
 import { AuthContext } from "@/context/AuthContext";
 import axios from "axios";
 import { GoogleLogin } from "@react-oauth/google";
-
+import CircularLoader from "@/components/ui/CircularLoader";
 
 
 export default function LoginPage() {
   const router = useRouter();
-  const auth = useContext(AuthContext);
+  const {login} = useContext(AuthContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+const [googleLoading, setGoogleLoading] = useState(false);
 
   
-// ✅ ALWAYS call hooks first
-useEffect(() => {
-  if (auth?.user) {
-    router.push("/");
-  }
-}, [auth?.user, router]); // ✅ include router
 
-// ⛔ AFTER hooks, you can conditionally return
-if (!auth) return null;
-
-const { login } = auth;
 
   const handleLogin = async () => {
-    try {
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
+  try {
+    setLoading(true);
 
-      const { token, user } = res.data;
+    const res = await api.post("/auth/login", {
+      email,
+      password,
+    });
 
-      login(user, token);
+    const { user } = res.data;
 
-      router.push("/dashboard");
-    } catch (error: unknown) {
+    login(user);
+    router.push("/dashboard");
 
-  if (axios.isAxiosError(error)) {
+  } catch (error: unknown) {
 
-    if (error.response?.data?.emailVerificationRequired) {
-      router.push(`/verify-email?email=${error.response.data.email}`);
-      return;
+    if (axios.isAxiosError(error)) {
+      if (error.response?.data?.emailVerificationRequired) {
+        router.push(`/verify-email?email=${error.response.data.email}`);
+        return;
+      }
     }
 
+    alert("Invalid credentials");
+  } finally {
+    setLoading(false);
   }
-
-  alert("Invalid credentials");
-}
-  };
+};
 
   return (
   <div className="min-h-screen bg-gradient-to-br from-[#eef2ff] to-[#e9ecff] flex items-center justify-center px-4">
@@ -132,11 +126,14 @@ const { login } = auth;
 
         {/* Login Button */}
         <button
-          onClick={handleLogin}
-          className="w-full py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-blue-500 text-white font-medium hover:opacity-90 transition"
-        >
-          Login
-        </button>
+  onClick={handleLogin}
+  disabled={loading}
+  className={`w-full py-2 rounded-lg text-white font-medium flex items-center justify-center gap-2 transition
+    ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-gradient-to-r from-indigo-500 to-blue-500 hover:opacity-90"}
+  `}
+>
+  {loading ? <CircularLoader size={18} /> : "Login"}
+</button>
 
         {/* Divider */}
         <div className="flex items-center gap-3 my-5">
@@ -146,27 +143,39 @@ const { login } = auth;
         </div>
 
         {/* Google Login */}
-        <div className="flex justify-center">
-          <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-              try {
-                const res = await api.post("/auth/google", {
-                  credential: credentialResponse.credential,
-                });
+        <div className="relative flex justify-center">
 
-                const { token, user } = res.data;
+  {googleLoading && (
+    <div className="absolute inset-0 flex items-center justify-center bg-white/60 rounded-lg z-10">
+      <CircularLoader size={28} />
+    </div>
+  )}
 
-                login(user, token);
-                router.push("/dashboard");
-              } catch (err) {
-                alert("Google login failed");
-              }
-            }}
-            onError={() => {
-              alert("Google Login Failed");
-            }}
-          />
-        </div>
+  <GoogleLogin
+    onSuccess={async (credentialResponse) => {
+      try {
+        setGoogleLoading(true);
+
+        const res = await api.post("/auth/google", {
+          credential: credentialResponse.credential,
+        });
+
+        const { user } = res.data;
+
+        login(user);
+        router.push("/dashboard");
+
+      } catch (err) {
+        alert("Google login failed");
+      } finally {
+        setGoogleLoading(false);
+      }
+    }}
+    onError={() => {
+      alert("Google Login Failed");
+    }}
+  />
+</div>
 
         {/* Bottom */}
         <p className="text-center text-sm text-gray-500 mt-6">
